@@ -1,0 +1,146 @@
+
+
+    //short objects (bump)
+    //holes (cliff)
+    //tall objects (cyBOT_Scan )
+
+
+/*
+cyBOT_Scan
+
+OI_Sensort
+    distance
+
+    angle
+
+    bumpLeft
+    bumpRight
+
+    cliffFrontLeft
+    cliffFrontRight
+*/
+
+#include <cyBot_uart.h>
+#include <stdio.h>
+#include <stdint.h>
+#include <string.h>
+#include <stdlib.h>
+#include <inc/tm4c123gh6pm.h>
+#include <lcd.h>
+//#include <open_interface.h>
+//#include <Timer.h>
+#include <movement.h>
+#include <cyBot_Scan.h>
+
+int main()
+{
+    //inits
+    cyBot_uart_init();
+    lcd_init();
+    cyBOT_init_Scan(0b0011);
+
+
+    char msg[] = "Got an m";
+    int i, j;
+    char degrees[] = "Degrees";
+    char distance[] = "Distance (cm)";
+    char val[10];
+    char val2[10];
+    float dist;
+
+    cyBOT_Scan_t* getScan;
+
+
+    oi_t *sensor_data = oi_alloc();
+    oi_init(sensor_data);
+
+
+
+    while (1){
+
+        int cybot_get = cyBot_getByte();
+
+        switch (cybot_get){
+            case ('m'):
+                for (i=0; i<sizeof(msg)/sizeof(msg[0]); i++){
+                        cyBot_sendByte(msg[i]);
+                }
+                cyBot_sendByte('\r');
+                cyBot_sendByte('\n');
+                oi_setWheels(0, 0);
+                break;
+
+            case ('w'):
+                oi_setWheels(500, 500);
+                break;
+
+            case ('a'):
+                oi_setWheels(500, -500);
+                break;
+
+            case ('s'):
+                oi_setWheels(-500, -500);
+                break;
+
+            case ('d'):
+                oi_setWheels(-500, 500);
+                break;
+
+            case ('p'):
+                for (i=0; i<sizeof(degrees)/sizeof(degrees[0]); i++){
+                        cyBot_sendByte(degrees[i]);
+                }
+                cyBot_sendByte('\r');
+                cyBot_sendByte('\t');
+
+                for (i=0; i<sizeof(distance)/sizeof(distance[0]); i++){
+                        cyBot_sendByte(distance[i]);
+                }
+                cyBot_sendByte('\r');
+                cyBot_sendByte('\n');
+
+
+                // go from 0 to 180 degrees
+                for (j=0; j<=180; j+=2){
+                    cyBOT_Scan(j, getScan);
+
+                    //typecast degree to char
+                    sprintf(val, "%d", j);
+                    for (i=0; i<sizeof(val)/sizeof(val[0]); i++){
+                         cyBot_sendByte(val[i]);
+                    }
+                    cyBot_sendByte('\r');
+                    cyBot_sendByte('\t');
+
+                    //typecast distance val to char
+                    sprintf(val2, "%d", getScan->sound_dist);
+                    for (i=0; i<sizeof(val2)/sizeof(val2[0]); i++){
+                         cyBot_sendByte(val2[i]);
+                   }
+                    cyBot_sendByte('\r');
+                    cyBot_sendByte('\n');
+                }
+
+                break;
+            default:
+                lcd_putc(cybot_get);
+                oi_setWheels(0, 0);
+        }
+
+
+    }
+
+    oi_free(sensor_data);
+
+
+
+}
+
+
+
+
+
+
+
+
+
