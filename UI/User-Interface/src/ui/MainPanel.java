@@ -11,6 +11,7 @@ import java.awt.event.MouseListener;
 
 public class MainPanel extends JPanel implements MouseListener {
 
+
     Image img;
     public MainPanel(){
         this.addMouseListener(this);
@@ -18,12 +19,18 @@ public class MainPanel extends JPanel implements MouseListener {
 
     }
 
-
+    /*
+    Draw bot, draw obstacles
+     */
     public void paintComponents(Graphics g){
 
     }
 
 
+    /**
+     * If valid click (inside screen), calculate directions for bot, then send instructions to bot
+     * @param e the event to be processed
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         int x = e.getX();
