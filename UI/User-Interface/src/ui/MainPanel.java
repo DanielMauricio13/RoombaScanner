@@ -1,0 +1,55 @@
+package ui;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+/**
+ * @author Coby Konkol
+ */
+
+public class MainPanel extends JPanel implements MouseListener {
+
+    Image img;
+    public MainPanel(){
+        this.addMouseListener(this);
+
+
+    }
+
+
+    public void paintComponents(Graphics g){
+
+    }
+
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        int x = e.getX();
+        int y = e.getY();
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+
+}
