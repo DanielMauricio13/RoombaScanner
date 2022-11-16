@@ -3,6 +3,7 @@ package ui;
 import java.util.ArrayList;
 
 /**
+ * This class manages the input stream, output stream and user interface
  * @author Coby Konkol
  */
 
@@ -13,11 +14,11 @@ public class Scenario {
     /**
      * Determine obstacle's absolute position using bot's absolute position and object relative position
      * Once obstacle is added to model, repaint UI
-     * @param angle
+     * @param angle in degrees
      * @param linearWidthCm
-     * @param distance
+     * @param distanceCm
      */
-    public void detectObstacle(float angle, float linearWidthCm, float distance){
+    public void detectObstacle(float angle, float linearWidthCm, float distanceCm){
 
     }
 }
