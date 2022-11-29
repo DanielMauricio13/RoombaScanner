@@ -10,11 +10,12 @@ import java.awt.event.MouseListener;
  */
 
 public class MainPanel extends JPanel implements MouseListener {
-
+    private Scenario scenario;
 
     Image img;
-    public MainPanel(){
+    public MainPanel(Scenario scenario){
         this.addMouseListener(this);
+        this.scenario = scenario;
 
 
     }

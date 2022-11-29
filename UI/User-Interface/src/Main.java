@@ -1,4 +1,4 @@
-import ui.UI;
+import ui.Scenario;
 
 /**
  * @author Coby Konkol
@@ -7,6 +7,6 @@ import ui.UI;
 public class Main {
     public static void main(String[] args) {
 
-        UI ui = new UI(800, 600);
+        Scenario scenario = new Scenario("Cybot_Name", 800, 600);
     }
 }

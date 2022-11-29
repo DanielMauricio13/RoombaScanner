@@ -39,11 +39,17 @@ private socket;
     });
 
     this.socket.on("message", (data) => {
-      console.log("Got message: " +data);
+      this.receiveMessage(data);
     })
     this.socket.emit('message', "text");
 
   }
+
+  receiveMessage(message: any){
+
+  }
+
+
   sendMessage(message: Message){
     this.socket.emit('message', message);
   }
