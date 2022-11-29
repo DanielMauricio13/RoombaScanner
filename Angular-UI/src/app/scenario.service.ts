@@ -17,6 +17,9 @@ export class ScenarioService {
 
     this._obstacles = [];
     this.cyBot = new CyBot(20, 20);
+    this.socketService.sharedMessage.subscribe(value => {
+      console.log(value);
+    })
 
   }
 
@@ -46,7 +49,10 @@ export class ScenarioService {
     this.obstacles.forEach((obstacle) =>{
       obstacle.draw(ctx);
     });
+
   }
+
+
 
 
 
