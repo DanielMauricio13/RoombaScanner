@@ -51,6 +51,12 @@ export class ScenarioService {
     });
 
   }
+  onClick(ev:MouseEvent){
+    let deltaX = ev.x - this._cyBot.getXCm;
+    let deltaY = ev.y - this._cyBot.YCm;
+    this.socketService.sendMessage("blah");
+
+  }
 
 
 
