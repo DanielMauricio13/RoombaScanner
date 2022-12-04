@@ -7,7 +7,7 @@ import socketio
 
 
 
-
+s = None
 class CyBotSocketServer():
     def __init__(self):
         self.sio = socketio.Server()
@@ -21,6 +21,7 @@ class CyBotSocketServer():
         @self.sio.event
         def my_message(sid, data):
             print('message ', data)
+            s.emit(bytes(data, 'utf-8'))
 
         @self.sio.event
         def disconnect(sid):

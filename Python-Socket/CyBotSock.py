@@ -31,5 +31,3 @@ class CybotSockListener(threading.Thread):
         pass
 
 
-
-class CybotSockSender:
