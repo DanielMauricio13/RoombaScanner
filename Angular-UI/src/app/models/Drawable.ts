@@ -1,4 +1,4 @@
-import {fieldWidth} from "../Constants";
+import {scale} from "../Constants";
 
 export class Drawable {
   protected color: string = "3370d4"
@@ -8,10 +8,6 @@ export class Drawable {
   }
 
   draw(ctx: CanvasRenderingContext2D) {
-    let width = ctx.canvas.clientWidth;
-    let height = ctx.canvas.clientHeight;
-
-    let scale: number = width / fieldWidth;
 
     console.log(this.xCm * scale);
 

@@ -50,9 +50,7 @@ sharedMessage = new ReplaySubject();
   }
 
 
-
-
-  sendMessage(message: Message){
+  sendMessage(message: string){
     this._socket.emit('message', message);
   }
 

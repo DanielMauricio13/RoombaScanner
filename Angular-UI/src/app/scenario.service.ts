@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Obstacle} from "./models/Obstacle";
 import {CyBot} from "./models/CyBot";
 import {SocketioService} from "./socketio.service";
+import {scale} from "./Constants";
 
 @Injectable({
   providedIn: 'root'
@@ -13,13 +14,15 @@ export class ScenarioService {
   private _cyBot!: CyBot;
 
 
+
   constructor(private socketService: SocketioService) {
 
     this._obstacles = [];
     this.cyBot = new CyBot(20, 20);
     this.socketService.sharedMessage.subscribe(value => {
       console.log(value);
-    })
+    });
+
 
   }
 
@@ -54,9 +57,14 @@ export class ScenarioService {
   onClick(ev:MouseEvent){
     let deltaX = ev.x - this._cyBot.getXCm;
     let deltaY = ev.y - this._cyBot.YCm;
-    this.socketService.sendMessage("blah");
+
+    let newXCm = ev.x / scale;
+    let newYCm = ev.y / scale;
+
+    console.log("newXCm, newYCm", + newXCm+ " " + newYCm);
 
   }
+
 
 
 
