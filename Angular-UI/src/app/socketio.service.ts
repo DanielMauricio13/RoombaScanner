@@ -4,7 +4,7 @@
 import {Injectable} from '@angular/core';
 import io from 'socket.io-client'
 import {Message} from "./models/message.model";
-import {map} from "rxjs";
+import {BehaviorSubject, map, Observable, ReplaySubject, Subject} from "rxjs";
 
 
 
@@ -16,10 +16,15 @@ import {map} from "rxjs";
 })
 export class SocketioService {
 
-private socket;
+
+
+
+
+private _socket;
+sharedMessage = new ReplaySubject();
 
   constructor() {
-    this.socket = io('127.0.0.1:5000', {
+    this._socket = io('127.0.0.1:5000', {
       reconnectionDelay: 1000,
       reconnection: true,
       reconnectionAttempts: 10,
@@ -31,29 +36,29 @@ private socket;
 
     console.log('connecting');
 
-    this.socket.on("connect_error", (err) => {
+    this._socket.on("connect_error", (err) => {
       console.log(`connect_error due to ${err.message}`);
     });
-    this.socket.on("connection", (socket) => {
+    this._socket.on("connection", (socket) => {
       console.log(socket);
     });
-
-    this.socket.on("message", (data) => {
-      this.receiveMessage(data);
-    })
-    this.socket.emit('message', "text");
-
-  }
-
-  receiveMessage(message: any){
+    this.socket.on("message", (msg) =>{
+      this.sharedMessage.next(msg);
+      }
+    );
 
   }
+
+
 
 
   sendMessage(message: Message){
-    this.socket.emit('message', message);
+    this._socket.emit('message', message);
   }
 
+  get socket() {
+    return this._socket;
+  }
 
 
 

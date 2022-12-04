@@ -21,4 +21,17 @@ export class Drawable {
     ctx.fill();
     ctx.stroke();
   }
+
+   setX(_x: number){
+    this.xCm = _x
+  }
+  setY(_y: number){
+    this.yCm = _y;
+  }
+  get getXCm(){
+    return this.xCm;
+  }
+  get YCm(){
+    return this.yCm;
+  }
 }
