@@ -122,8 +122,8 @@ export class ScenarioService {
 
     console.log("Found: " + angleChange + "xchange, ychange" + xChange + " "  + yChange);
     console.log("Found: angle: " + newAngle + ", distance " + distance);
-    this.socketService.sendMessage("d" + newAngle);
-    //this.socketService.sendMessage("w" + distance);
+    this.socketService.sendMessage( parseInt(String(newAngle)) + "d" +"\r\n");
+    this.socketService.sendMessage(distance + "w" + "\r\n");
 
     this._moving = true;
 
@@ -229,6 +229,7 @@ export class ScenarioService {
    * @param msg
    */
   getAmountTurned(msg: string){
+    console.log("Turned: " + msg);
     msg = msg.replace("turn", "");
     msg = msg.trim();
     var angle = Number(msg.replace(/[^0-9\.]+/g,""));
@@ -246,6 +247,7 @@ export class ScenarioService {
   getCliffMessage(msg: string){
     msg = msg.replace("cliff", "");
     msg = msg.trim();
+    console.log("CLIFF HIT");
 
     if(msg == "ll"){
       // TODO plot line for cliff
@@ -268,7 +270,8 @@ export class ScenarioService {
    * @param msg
    */
   getReadyMessage(msg: string){
-    this._moving = true;
+    console.log("READY RECEIVED");
+    this._moving = false;
   }
 
   /**
