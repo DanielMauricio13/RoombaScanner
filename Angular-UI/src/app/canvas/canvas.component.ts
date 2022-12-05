@@ -30,6 +30,9 @@ export class CanvasComponent implements OnInit {
     this.canvas.nativeElement.addEventListener("click", ev => {
         this.scenario.onClick(ev);
     });
+    while(true) {
+      this.animate();
+    }
   }
 
   animate(): void {

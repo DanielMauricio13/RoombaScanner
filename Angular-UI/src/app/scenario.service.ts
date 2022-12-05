@@ -28,8 +28,6 @@ export class ScenarioService {
       this.receiveMessage(value);
     });
     this._moving = false;
-
-
   }
 
   get cyBot(): CyBot {
@@ -76,6 +74,9 @@ export class ScenarioService {
 
   }
 
+
+  // MOUSE INTERACTIONS:
+
   /**
    * The user clicked a location on the screen
    * @param ev
@@ -85,15 +86,32 @@ export class ScenarioService {
       let deltaX = ev.x - this._cyBot.getXCm;
       let deltaY = ev.y - this._cyBot.YCm;
 
-      let newXCm = ev.x / scale;
-      let newYCm = ev.y / scale;
+      let newXCm = ev.y / scale;
+      let newYCm = ev.x / scale;
+
+      let mAngle = this._cyBot.angle;
+
 
       console.log("newXCm, newYCm", +newXCm + " " + newYCm);
+      this.goToXYCM(newXCm, newYCm);
       this._moving = true;
     }
     else{
       console.log("CyBot is not ready to receive instructions!");
     }
+
+  }
+
+  goToXYCM(xCm: number, yCm: number){
+    let deltaX = xCm - this._cyBot.XCm;
+    let deltaY = yCm - this._cyBot.YCm;
+
+    let cyBotAngle = this._cyBot.angle;
+
+    let angleToCyBot = -1; //TODO MATH
+
+    let distanceToCybot = -1; //TODO MATH
+
 
   }
 
@@ -103,6 +121,7 @@ export class ScenarioService {
    * @param msg
    */
   receiveMessage(msg: string){
+    msg = msg.trim();
     msg = msg.replace("START", "");
     msg = msg.replace("END", "");
     msg = msg.trim();
@@ -118,15 +137,16 @@ export class ScenarioService {
     else if(msg.startsWith("cliff")){
       this.getCliffMessage(msg);
     }
-    else if(msg.startsWith("amount moved")){
+    else if(msg.startsWith("move")){
       this.getAmountMoved(msg);
     }
-    else if(msg.startsWith("amount turned")){
+    else if(msg.startsWith("turn")){
       this.getAmountTurned(msg);
     }
     else if(msg.startsWith("READY")){
       this.getReadyMessage(msg);
     }
+
 
   }
 
@@ -174,7 +194,7 @@ export class ScenarioService {
    * @param msg
    */
   getAmountMoved(msg: string){
-    msg = msg.replace("amount moved", "");
+    msg = msg.replace("move", "");
     msg = msg.trim();
 
     var dist = Number(msg.replace(/[^0-9\.]+/g,""));
@@ -189,7 +209,7 @@ export class ScenarioService {
    * @param msg
    */
   getAmountTurned(msg: string){
-    msg = msg.replace("amount turned", "");
+    msg = msg.replace("turn", "");
     msg = msg.trim();
     var angle = Number(msg.replace(/[^0-9\.]+/g,""));
 
