@@ -3,7 +3,7 @@ import {fieldWidth} from "../Constants";
 import {Drawable} from "./Drawable";
 ///<reference path="../Constants.ts"/>
 
-export class Obstacle extends Drawable{
+export class TallObstacle extends Drawable{
 
 
 

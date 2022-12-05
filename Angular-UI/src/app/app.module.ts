@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppComponent } from './app.component';
 import { CanvasComponent } from './canvas/canvas.component';
-import { Obstacle } from './models/Obstacle';
+import { TallObstacle } from './models/TallObstacle';
 import {ScenarioService} from "./scenario.service";
 import {SocketioService} from "./socketio.service";
 import {SocketIoConfig, SocketIoModule} from "ngx-socket-io";

@@ -21,7 +21,7 @@ export class SocketioService {
 
 
 private _socket;
-sharedMessage = new ReplaySubject();
+sharedMessage = new ReplaySubject<string>();
 
   constructor() {
     this._socket = io('127.0.0.1:5000', {

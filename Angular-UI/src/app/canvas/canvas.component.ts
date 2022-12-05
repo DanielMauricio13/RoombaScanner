@@ -1,6 +1,6 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {animate} from "@angular/animations";
-import {Obstacle} from "../models/Obstacle";
+import {TallObstacle} from "../models/TallObstacle";
 import {CyBot} from "../models/CyBot";
 import {ScenarioService} from "../scenario.service";
 
