@@ -9,9 +9,6 @@ export class Drawable {
 
   draw(ctx: CanvasRenderingContext2D) {
 
-    console.log(this.xCm * scale);
-
-
     ctx.fillStyle = this.color;
     ctx.arc(this.xCm * scale, this.yCm * scale, this.width * scale, 0, 2 * Math.PI);
     ctx.fill();

@@ -3,6 +3,7 @@ import {TallObstacle} from "./models/TallObstacle";
 import {CyBot} from "./models/CyBot";
 import {SocketioService} from "./socketio.service";
 import {scale} from "./Constants";
+import {ShortObstacle} from "./models/ShortObstacle";
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ export class ScenarioService {
 
 
   private _tallObstacles: TallObstacle[];
+  private _shortObstacles: ShortObstacle[];
   private _cyBot!: CyBot;
   private _moving: boolean;
 
@@ -19,6 +21,8 @@ export class ScenarioService {
   constructor(private socketService: SocketioService) {
 
     this._tallObstacles = [];
+    this._shortObstacles = [];
+
     this.cyBot = new CyBot(20, 20);
     this.socketService.sharedMessage.subscribe(value => {
       this.receiveMessage(value);
@@ -40,13 +44,22 @@ export class ScenarioService {
     return this._tallObstacles;
   }
 
-
   addTallObstacle(obstacle: TallObstacle) {
     this.tallObstacles.push(obstacle);
   }
 
+  get shortObstacles(): ShortObstacle[]{
+    return this._shortObstacles;
+  }
+  addShortObstacle(xCm:number, yCm:number){
+    let obstacle = new ShortObstacle(xCm, yCm);
+    this._shortObstacles.push(obstacle);
+  }
 
-
+  /**
+   * Draw all drawable elements on the canvas
+   * @param ctx
+   */
   drawElements(ctx: CanvasRenderingContext2D){
 
 
@@ -57,7 +70,16 @@ export class ScenarioService {
       obstacle.draw(ctx);
     });
 
+    this.shortObstacles.forEach((obstacle) =>{
+      obstacle.draw(ctx);
+    });
+
   }
+
+  /**
+   * The user clicked a location on the screen
+   * @param ev
+   */
   onClick(ev:MouseEvent){
     if(!this._moving) {
       let deltaX = ev.x - this._cyBot.getXCm;
@@ -69,8 +91,17 @@ export class ScenarioService {
       console.log("newXCm, newYCm", +newXCm + " " + newYCm);
       this._moving = true;
     }
+    else{
+      console.log("CyBot is not ready to receive instructions!");
+    }
 
   }
+
+  //MESSAGES
+  /**
+   * Receive general message (called from subscription) over socket
+   * @param msg
+   */
   receiveMessage(msg: string){
     msg = msg.replace("START", "");
     msg = msg.replace("END", "");
@@ -93,8 +124,17 @@ export class ScenarioService {
     else if(msg.startsWith("amount turned")){
       this.getAmountTurned(msg);
     }
+    else if(msg.startsWith("READY")){
+      this.getReadyMessage(msg);
+    }
 
   }
+
+  /**
+   * Found a tall obstacle using IR sensor
+   * Called when message of format "START obj <distance> END"
+   * @param msg
+   */
   getTallObstacleMessage(msg: string){
     // START obj <angle>, <distance>, <width> END
 
@@ -105,6 +145,12 @@ export class ScenarioService {
     console.log("Received Object (angle, distance):" + msg);
     //TODO TEST
   }
+
+  /**
+   * Robot bumped into an obstacle
+   * Called whe message of format "START BUMP {l/r/b} END"
+   * @param msg
+   */
   getBumpMessage(msg: string){
     msg = msg.replace("bump", "");
     msg = msg.trim();
@@ -122,7 +168,11 @@ export class ScenarioService {
       this.getUnknownMessage("bump " +msg);
     }
   }
-
+  /**
+   * Robot drove a certain distance from current position
+   * Called wHen message of format "START amount moved <distance> END
+   * @param msg
+   */
   getAmountMoved(msg: string){
     msg = msg.replace("amount moved", "");
     msg = msg.trim();
@@ -130,9 +180,14 @@ export class ScenarioService {
     var dist = Number(msg.replace(/[^0-9\.]+/g,""));
     this._cyBot.move(dist);
 
-    this._moving = false;
     //TODO TEST
   }
+
+  /**
+   * CyBot turned a certain angle from current position
+   * Called when message format "START amount turned <angle> END"
+   * @param msg
+   */
   getAmountTurned(msg: string){
     msg = msg.replace("amount turned", "");
     msg = msg.trim();
@@ -142,8 +197,14 @@ export class ScenarioService {
     //TODO TEST
 
   }
+
+  /**
+   * CyBot detected a cliff at the corresponding sensor
+   * Called when message format "START cliff {ll/ml/mr/rr} END"
+   * @param msg
+   */
   getCliffMessage(msg: string){
-    msg = msg.replace("cilff", "");
+    msg = msg.replace("cliff", "");
     msg = msg.trim();
 
     if(msg == "ll"){
@@ -160,6 +221,20 @@ export class ScenarioService {
     }
 
   }
+
+  /**
+   * CyBot is ready to receive more instructions
+   * Called when message format "START READY END"
+   * @param msg
+   */
+  getReadyMessage(msg: string){
+    this._moving = true;
+  }
+
+  /**
+   * CyBot sent a message that is not recognized by the code
+   * @param msg
+   */
   getUnknownMessage(msg: string){
     console.log("UNKNOWN MESSAGE: " + msg);
   }

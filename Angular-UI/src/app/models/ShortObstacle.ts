@@ -9,6 +9,6 @@ export class ShortObstacle extends Drawable{
 
   constructor(xCm: number, yCm: number) {
     super(xCm, yCm, 13);
-    this.color = "#0000FF";
+    this.color = "#000088";
   }
 }

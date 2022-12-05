@@ -16,7 +16,7 @@ export class CyBot extends Drawable{
     //TODO
   }
   public turn(angle:number){
-    //TODO update angle
+    //TODO update angle REMEMBER TO ROLL ANGLE BACK TO 0-360
   }
 
   get angle(){

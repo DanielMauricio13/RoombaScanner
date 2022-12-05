@@ -3,7 +3,6 @@
 
 import {Injectable} from '@angular/core';
 import io from 'socket.io-client'
-import {Message} from "./models/message.model";
 import {BehaviorSubject, map, Observable, ReplaySubject, Subject} from "rxjs";
 
 
