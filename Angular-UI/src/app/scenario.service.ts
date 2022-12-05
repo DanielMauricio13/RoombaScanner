@@ -4,6 +4,7 @@ import {CyBot} from "./models/CyBot";
 import {SocketioService} from "./socketio.service";
 import {scale} from "./Constants";
 import {ShortObstacle} from "./models/ShortObstacle";
+import {BehaviorSubject} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ export class ScenarioService {
   private _shortObstacles: ShortObstacle[];
   private _cyBot!: CyBot;
   private _moving: boolean;
-
+  updateGui: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
 
   constructor(private socketService: SocketioService) {
@@ -26,6 +27,8 @@ export class ScenarioService {
     this.cyBot = new CyBot(20, 20);
     this.socketService.sharedMessage.subscribe(value => {
       this.receiveMessage(value);
+      this.updateGui.next(true);
+
     });
     this._moving = false;
   }
@@ -83,7 +86,7 @@ export class ScenarioService {
    */
   onClick(ev:MouseEvent){
     if(!this._moving) {
-      let deltaX = ev.x - this._cyBot.getXCm;
+      let deltaX = ev.x - this._cyBot.XCm;
       let deltaY = ev.y - this._cyBot.YCm;
 
       let newXCm = ev.y / scale;
