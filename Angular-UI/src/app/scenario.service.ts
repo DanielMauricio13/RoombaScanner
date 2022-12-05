@@ -83,7 +83,7 @@ export class ScenarioService {
    */
   onClick(ev:MouseEvent){
     if(!this._moving) {
-      let deltaX = ev.x - this._cyBot.getXCm;
+      let deltaX = ev.x - this._cyBot.XCm;
       let deltaY = ev.y - this._cyBot.YCm;
 
       let newXCm = ev.y / scale;
