@@ -42,12 +42,10 @@ class CyBotSocketServer():
             sio.emit("message", "Welcome")
             print('connect ', sid)
 
-        @sio.event
+        @sio.on("message")
         def my_message(sid, data):
             print('message ', data)
-            s.emit(bytes(data, 'utf-8'))
-            s.emit(bytes(data, "utf-8"))
-            print("message", data)
+            s.send(bytes(data, 'utf8'))
 
         @sio.event
         def disconnect(sid):
@@ -57,7 +55,7 @@ class CyBotSocketServer():
 
 
 if __name__ == "__main__":
-    useCybot = False
+    useCybot = True
     if useCybot:
         global s
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
