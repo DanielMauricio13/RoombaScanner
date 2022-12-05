@@ -15,7 +15,7 @@ extern volatile int uart_event;
 extern volatile char uart_data;
 extern volatile char stopFlag;
 
-const float a_las=3906882.5, b_las=-1.618058; //set this up in a different file (lab 8 main)
+const float a_las=1569377.5, b_las=-1.498272; //set this up in a different file (lab 8 main)
 const float degToRad = 3.141592653/180;
 const int minObjDist = 55; //minimum distance detected by ping sensor for something to be considered an "object"
 
@@ -56,15 +56,15 @@ int measure_data(){
         laserADC /= 3;
 
         //print angle
-        strcpy(puttyIn,"");
-        sprintf(puttyIn, "%d\t", j);
-        uart_sendStr(puttyIn);
+        //strcpy(puttyIn,"");
+        //sprintf(puttyIn, "%d\t", j);
+        //uart_sendStr(puttyIn);
 
 
         //get/print ir distance
         laserDist = a_las * pow(laserADC, b_las);
-        sprintf(puttyIn, "%f\r\n", laserDist);
-        uart_sendStr(puttyIn);
+        //sprintf(puttyIn, "%f\r\n", laserDist);
+        //uart_sendStr(puttyIn);
 
 
         if ( (laserDist<minObjDist) && (isObject==0) ){ //detects object
@@ -141,7 +141,7 @@ void main(){
     oi_t *sensor_data = oi_alloc();
     oi_init(sensor_data);
 
-
+    //uart_sendStr("START high long message here with a lot og characters END");
 
     int numChars=0;
 	int amountScanned;
@@ -150,6 +150,7 @@ void main(){
     int amountDo;
 
 	amountMoved = 0;
+	uart_sendStr("Input: ");
     while(1){
 
         if (uart_event){ //if putty detects a keypress
@@ -170,33 +171,41 @@ void main(){
 
                 switch (whatDo){
                 case ('w'): //w is move forwards (cm)
-                        sprintf(puttyIn, "Moving forwards for %d cm\r\n", amountDo);
-                        uart_sendStr(puttyIn);
+                        uart_sendStr("START move ");
+
                         amountMoved = move_forwards(sensor_data, amountDo, a_las, b_las);
-                        uart_sendStr("Done\r\n\n");
+
+                        sprintf(puttyIn, "%f ", amountMoved);
+                        uart_sendStr(puttyIn);
+                        uart_sendStr("END\n\r");
                         break;
 
                 case ('s'): //s is move backwards (cm)
-                        sprintf(puttyIn, "Moving backwards for %d cm\r\n", amountDo);
-                        uart_sendStr(puttyIn);
+                        uart_sendStr("Moving back (deprecated)\n\r");
                         amountDo *= -1;
                         amountMoved = move_forwards(sensor_data, amountDo, a_las, b_las);
-                        uart_sendStr("Done\r\n\n");
+                        uart_sendStr("Finished, but you shouldn't see this\r\n\n");
                         break;
 
                 case ('a'): //a is rotate left (degrees)
-                        sprintf(puttyIn, "Turning left for %d degrees\r\n", amountDo);
-                        uart_sendStr(puttyIn);
+                        uart_sendStr("START turn ");
                         amountDo *= -1;
+
                         amountMoved = turn_clockwise(sensor_data, amountDo);
-                        uart_sendStr("Done\r\n\n");
+
+                        sprintf(puttyIn, "%f ", amountMoved);
+                        uart_sendStr(puttyIn);
+                        uart_sendStr("END\n\r");
                         break;
 
                 case ('d'): //d is rotate right (degrees)
-                        sprintf(puttyIn, "Turning right for %d degrees\r\n", amountDo);
-                        uart_sendStr(puttyIn);
+                        uart_sendStr("START turn ");
+
                         amountMoved = turn_clockwise(sensor_data, amountDo);
-                        uart_sendStr("Done\r\n\n");
+
+                        sprintf(puttyIn, "%f ", amountMoved);
+                        uart_sendStr(puttyIn);
+                        uart_sendStr("END\n\r");
                         break;
 
                 case ('c'): //calibrate
@@ -213,65 +222,63 @@ void main(){
                 }//end of switch
 				
 				
-				if (whatDo != 'c'){ //do not measure after calibrating the sensor
+				if (whatDo == 'w'){ //measure after moving
 					//scan 180 degrees and send to putty
-					uart_sendStr("Ang\tDist (ping)\tDist (laser)\r\n"); //header of measurement
+					//uart_sendStr("Ang\tDist (ping)\tDist (laser)\r\n"); //header of measurement
 
 					servo_move(0);
 					timer_waitMillis(1000);
 
 					amountScanned = measure_data();
-					
-					//send amount moved
-					uart_sendStr("START amount moved: ");
-					sprintf(puttyIn, "%f", amountMoved);
-					uart_sendStr(puttyIn);
-					uart_sendStr("END amount moved/n/r");
 
 
                     //stop flag has been changed due to
 					if (stopFlag == 'L'){
-					    uart_sendStr("START bumped left END");
+					    uart_sendStr("START bump l END\r\n");
 					}
 					if (stopFlag == 'R'){
-                        uart_sendStr("START bumped right END");
+                        uart_sendStr("START bump r END\r\n");
                     }
 					if (stopFlag == 'B'){
-                        uart_sendStr("START bumped both END");
+                        uart_sendStr("START bump b END\r\n");
                     }
 					if (stopFlag == '1'){
-                        uart_sendStr("START cliff left left END");
+                        uart_sendStr("START cliff ll END\r\n");
                     }
 					if (stopFlag == '2'){
-                        uart_sendStr("START cliff mid left END");
+                        uart_sendStr("START cliff ml END\r\n");
                     }
 					if (stopFlag == '3'){
-                        uart_sendStr("START cliff mid right END");
+                        uart_sendStr("START cliff mr END\r\n");
                     }
 					if (stopFlag == '4'){
-                        uart_sendStr("START cliff right right END");
+                        uart_sendStr("START cliff rr END\r\n");
                     }
+					if (stopFlag != '\0'){
+					    uart_sendStr("START move ");
+					    amountMoved = move_forwards(sensor_data, -15, a_las, b_las);
+                        sprintf(puttyIn, "%f ", amountMoved);
+                        uart_sendStr(puttyIn);
+                        uart_sendStr("END\n\r");
+					}
 					// do we want a message that returns if an object is seen in front of the roomba while driving?
 
 
 					for (numChars = 0; numChars<amountScanned; numChars++){ //funny memory conservation
-					    uart_sendStr("START obj:");
-						sprintf(puttyIn, " %d", numChars);
+					    uart_sendStr("START obj ");
+						//sprintf(puttyIn, " %d", numChars);
+						//uart_sendStr(puttyIn);
+						sprintf(puttyIn, "%d, ", tObject[numChars].actualAng);
 						uart_sendStr(puttyIn);
-						sprintf(puttyIn, " %d", tObject[numChars].actualAng);
+						sprintf(puttyIn, "%f, ", tObject[numChars].objDist);
 						uart_sendStr(puttyIn);
-						sprintf(puttyIn, " %f", tObject[numChars].objDist);
+						sprintf(puttyIn, "%f ", tObject[numChars].width);
 						uart_sendStr(puttyIn);
-						sprintf(puttyIn, " %f", tObject[numChars].width);
-						uart_sendStr(puttyIn);
-						uart_sendStr(" END\n\r");
+						uart_sendStr("END\n\r");
 					}
-					numChars=0; //reset
 				}
-				
-				
-				
-				
+				numChars=0; //reset
+				uart_sendStr("START READY END\r\n\nInput: ");
             }
         }
 
