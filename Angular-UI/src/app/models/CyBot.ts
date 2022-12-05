@@ -26,7 +26,7 @@ export class CyBot extends Drawable{
       mAngle = -1 * 360 - mAngle;
     }
     else if(mAngle < -180){
-      mAngle = -1 * (-360 - 180);
+      mAngle = -1 * (-360 - mAngle);
     }
     this._angle = mAngle;
     //TODO TEST
@@ -34,10 +34,10 @@ export class CyBot extends Drawable{
 
   override draw(ctx: CanvasRenderingContext2D) {
     ctx.fillStyle = this.color;
-    ctx.arc(this.yCm * scale, this.xCm * scale, this.width * scale, 0, 2 * Math.PI);
+    ctx.arc(this.xCm * scale, this.yCm * scale, this.width * scale, 0, 2 * Math.PI);
     ctx.fill();
     ctx.stroke();
-    this.draw_arrow(ctx, this.yCm* scale, this.xCm * scale, this._angle + 90, 15);
+    this.draw_arrow(ctx, this.xCm* scale, this.yCm * scale, this._angle, 15);
   }
 
   get angle(){

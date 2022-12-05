@@ -85,19 +85,19 @@ export class ScenarioService {
    * @param ev
    */
   onClick(ev:MouseEvent){
+    console.log(" " + ev.offsetX + " " + ev.offsetY);
     if(!this._moving) {
-      let deltaX = ev.x - this._cyBot.XCm;
-      let deltaY = ev.y - this._cyBot.YCm;
 
-      let newXCm = ev.y / scale;
-      let newYCm = ev.x / scale;
+
+      let newXCm = (ev.x - 10) / scale;
+      let newYCm = (ev.y - 75.5) / scale;
 
       let mAngle = this._cyBot.angle;
 
+      console.log("Clicked " + newXCm + ", " + newYCm);
 
-      console.log("newXCm, newYCm", +newXCm + " " + newYCm);
       this.goToXYCM(newXCm, newYCm);
-      this._moving = true;
+
     }
     else{
       console.log("CyBot is not ready to receive instructions!");
@@ -106,15 +106,26 @@ export class ScenarioService {
   }
 
   goToXYCM(xCm: number, yCm: number){
-    let deltaX = xCm - this._cyBot.XCm;
-    let deltaY = yCm - this._cyBot.YCm;
+    let cyX = this._cyBot.XCm;
+    let cyY = this._cyBot.YCm;
+
+    let xChange = xCm - cyX;
+    let yChange = yCm - cyY;
+
+    let angleChange = Math.atan2(yChange , xChange);
+
+    let distance = Math.sqrt(xChange * xChange + yChange * yChange) - 20;
 
     let cyBotAngle = this._cyBot.angle;
 
-    let angleToCyBot = -1; //TODO MATH
+    let newAngle = (cyBotAngle + (angleChange * 180 / Math.PI)) % 360;
 
-    let distanceToCybot = -1; //TODO MATH
+    console.log("Found: " + angleChange + "xchange, ychange" + xChange + " "  + yChange);
+    console.log("Found: angle: " + newAngle + ", distance " + distance);
+    this.socketService.sendMessage("d" + newAngle);
+    //this.socketService.sendMessage("w" + distance);
 
+    this._moving = true;
 
   }
 

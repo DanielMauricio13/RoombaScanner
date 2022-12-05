@@ -37,9 +37,10 @@ sharedMessage = new ReplaySubject<string>();
 
     this._socket.on("connect_error", (err) => {
       console.log(`connect_error due to ${err.message}`);
+      this._socket.emit("Connected!");
     });
     this._socket.on("connection", (socket) => {
-      console.log(socket);
+      console.log("Connected");
     });
     this.socket.on("message", (msg) =>{
       this.sharedMessage.next(msg);
@@ -50,6 +51,7 @@ sharedMessage = new ReplaySubject<string>();
 
 
   sendMessage(message: string){
+    console.log("sending: " + message);
     this._socket.emit('message', message);
   }
 
