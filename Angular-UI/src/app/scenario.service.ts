@@ -181,7 +181,32 @@ export class ScenarioService {
     let distance= parseInt(textTemp1);
     msg= msg.replace(textTemp1+ ',', "");
     let width= parseInt(msg);
-    this.tallObstacles.push(new TallObstacle(1,1,width))
+    let tempX;
+    let tempY;
+    if(angle >0){
+      tempY= Math.sin(angle) * distance;
+      tempY=this._cyBot.YCm + tempY;
+      let c= (distance * distance) - ( tempY * tempY);
+      c= Math.sqrt(c);
+      if(angle > 90)
+        tempX= this._cyBot.YCm - c;
+      else
+        tempX= this._cyBot.YCm + c;
+
+    }
+    else{
+      angle= angle * -1;
+      tempY= Math.sin(angle) * distance;
+      tempY=this._cyBot.YCm - tempY;
+      let c= (distance * distance) - ( tempY * tempY);
+      c= Math.sqrt(c);
+      if(angle > -90)
+        tempX= this._cyBot.YCm + c;
+      else
+        tempX= this._cyBot.YCm - c;
+
+    }
+    this._tallObstacles.push(new TallObstacle(tempX,tempY,width))
     console.log("Received Object (angle, distance):" + msg);
     //TODO TEST
   }
