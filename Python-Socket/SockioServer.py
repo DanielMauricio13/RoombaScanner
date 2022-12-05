@@ -28,7 +28,10 @@ def listen(sock):
             print("found: ", str(l))
             bg_emit(l)
             eventlet.sleep(2)
-
+def listenFake():
+    while True:
+        msg = input("input message: ")
+        bg_emit(msg)
 class CyBotSocketServer():
     def __init__(self):
 
@@ -54,12 +57,13 @@ class CyBotSocketServer():
 
 
 if __name__ == "__main__":
-    useCybot = True
+    useCybot = False
     if useCybot:
         global s
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.connect(("192.168.1.1", 288))
         print("Connected")
         eventlet.spawn(listen, s)
-
+    else:
+        eventlet.spawn(listenFake)
     server = CyBotSocketServer()
