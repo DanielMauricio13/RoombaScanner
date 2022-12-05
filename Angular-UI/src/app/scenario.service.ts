@@ -206,7 +206,7 @@ export class ScenarioService {
         tempX= this._cyBot.YCm - c;
 
     }
-    this.tallObstacles.push(new TallObstacle(tempX,tempY,width))
+    this._tallObstacles.push(new TallObstacle(tempX,tempY,width))
     console.log("Received Object (angle, distance):" + msg);
     //TODO TEST
   }
