@@ -29,7 +29,6 @@ def listen(sock):
             bg_emit(l)
             eventlet.sleep(2)
 
-
 class CyBotSocketServer():
     def __init__(self):
 
@@ -42,6 +41,8 @@ class CyBotSocketServer():
 
         @sio.event
         def my_message(sid, data):
+            print('message ', data)
+            s.emit(bytes(data, 'utf-8'))
             s.emit(bytes(data, "utf-8"))
             print("message", data)
 
