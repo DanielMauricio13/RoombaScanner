@@ -1,6 +1,7 @@
 ///<reference path="../Constants.ts"/>
 
 import {Drawable} from "./Drawable";
+import {scale} from "../Constants";
 export class CyBot extends Drawable{
 
   private _angle: number; // angle in degrees
@@ -29,6 +30,14 @@ export class CyBot extends Drawable{
     }
     this._angle = mAngle;
     //TODO TEST
+  }
+
+  override draw(ctx: CanvasRenderingContext2D) {
+    ctx.fillStyle = this.color;
+    ctx.arc(this.yCm * scale, this.xCm * scale, this.width * scale, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.stroke();
+    this.draw_arrow(ctx, this.yCm* scale, this.xCm * scale, this._angle + 90, 15);
   }
 
   get angle(){

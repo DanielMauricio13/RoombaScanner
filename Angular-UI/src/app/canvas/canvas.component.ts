@@ -20,7 +20,11 @@ export class CanvasComponent implements OnInit {
 
 
   constructor(private scenario: ScenarioService) {
-
+    this.scenario.updateGui.subscribe((value) => {
+      if(value){
+        this.animate();
+      }
+    })
 
   }
 
@@ -30,9 +34,8 @@ export class CanvasComponent implements OnInit {
     this.canvas.nativeElement.addEventListener("click", ev => {
         this.scenario.onClick(ev);
     });
-    while(true) {
-      this.animate();
-    }
+
+    this.animate();
   }
 
   animate(): void {
