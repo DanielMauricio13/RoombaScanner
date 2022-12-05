@@ -163,8 +163,14 @@ export class ScenarioService {
 
     msg = msg.replace("obj", "");
     msg = msg.trim();
-
-    //TODO parse out angle, width
+    let textTemp1= msg.substring(0, msg.indexOf(','));
+    let angle= parseInt(textTemp1);
+    msg= msg.replace(textTemp1+ ',', "");
+    textTemp1= msg.substring(0, msg.indexOf(','));
+    let distance= parseInt(textTemp1);
+    msg= msg.replace(textTemp1+ ',', "");
+    let width= parseInt(msg);
+    this.tallObstacles.push(new TallObstacle(1,1,width))
     console.log("Received Object (angle, distance):" + msg);
     //TODO TEST
   }
@@ -261,6 +267,7 @@ export class ScenarioService {
   getUnknownMessage(msg: string){
     console.log("UNKNOWN MESSAGE: " + msg);
   }
+
 
 
 
