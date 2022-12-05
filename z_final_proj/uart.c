@@ -49,7 +49,7 @@ void uart_sendChar(char data){
            hasData = 1;
            break;
        }
-       timer_waitMillis(1);
+       //timer_waitMillis(1);
    }
    if (!hasData){
        UART1_DR_R = '\0';
