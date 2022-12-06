@@ -22,12 +22,18 @@ endChar = "end"
 def bg_emit(_str):
     sio.emit('message', _str)
 def listen(sock):
+    str = ""
     while True:
-        line = re.split("start.+?end", sock.recv(1024).decode('utf8'))
-        for l in line:
-            print("found: ", str(l))
-            bg_emit(l)
-            eventlet.sleep(2)
+
+        line = sock.recv(1024).decode('utf8')
+        str  += line
+        print(str)
+        data = re.findall("START.+?END", str)
+        for d in data:
+            bg_emit(d)
+            str = str.replace(d, "")
+
+
 def listenFake():
     while True:
         msg = input("input message: ")
