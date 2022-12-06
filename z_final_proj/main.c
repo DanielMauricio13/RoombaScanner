@@ -15,7 +15,7 @@ extern volatile int uart_event;
 extern volatile char uart_data;
 extern volatile char stopFlag;
 
-const float a_las=1569377.5, b_las=-1.498272; //set this up in a different file (lab 8 main)
+const float a_las=7321145, b_las=-1.802885; //set this up in a different file (lab 8 main)
 const float degToRad = 3.141592653/180;
 const int minObjDist = 55; //minimum distance detected by ping sensor for something to be considered an "object"
 
