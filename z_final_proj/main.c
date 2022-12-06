@@ -166,23 +166,40 @@ void main(){
 				//amountDo = atoi(puttyIn); //converts numbers in the string to an int until something that isn't a number is reached
 				whatDo = puttyIn[numChars-2]; //converts last user input before enter key into a command
 
-				//char * str = malloc(numChars * sizeof(char));
-				//strcpy(str, puttyIn);
+				//creates pointer str that will have relevant puttyIn data copied into it
+				char * str = malloc(numChars * sizeof(char));
+				strcpy(str, puttyIn);
+
+				//removes whitespace in front of str (shouldn't be an issue because str is directly copied from puttyIn
 				//while(isspace((unsigned char)str)) str++;
 
-				char * amounts;
-				amounts = strtok(puttyIn, ",");
-				amountDo = atoi(amounts);
+				char * amounts;                     //creates pointer "amounts" that stores data based on comma delimiter
+				amounts = strtok(str, ",");         //fills "amounts" pointer with any data from "str" (puttyIn) until comma
+				amountDo = atoi(amounts);           //converts "amounts" string into integer
+				//testing
+				/*sprintf(puttyIn, "%d %d", amountDo, amountDo2);
+                uart_sendStr(puttyIn);*/
 
-				amounts = strtok(puttyIn, ",");
-				int amountDo2 =  atoi(amounts);
 
+				amounts = strtok(NULL, ",");        //In the next call to strtok, the first parameter needs to be NULL so that strtok starts splitting the string from the next token's starting position it remembers.
+				int amountDo2 =  atoi(amounts);     //converts new "amounts" string into integer
+				//testing
+				/*sprintf(puttyIn, "%d %d", amountDo, amountDo2);
+                uart_sendStr(puttyIn);*/
+
+				//frees str and amounts pointers
+				free(str);
+				free(amounts);
 
 				uart_sendChar('\r');
 				uart_sendChar('\n');
 
                 switch (whatDo){
                 case ('q'):
+                        //testing
+                        /*sprintf(puttyIn, "%d %d", amountDo, amountDo2);
+                        uart_sendStr(puttyIn);*/
+
                         uart_sendStr("START turn ");
 
                         amountMoved = turn_clockwise(sensor_data, amountDo);
