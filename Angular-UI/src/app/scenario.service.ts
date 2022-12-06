@@ -213,16 +213,37 @@ export class ScenarioService {
   getBumpMessage(msg: string){
     msg = msg.replace("bump", "");
     msg = msg.trim();
-    if(msg == 'l'){
-      // TODO add short obstacle
+   if(msg == 'l'){
+        if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm + 8, this._cyBot.YCm +8));
+        else if(this.cyBot.angle > -135 &&  this._cyBot.angle < -45)
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm -8, this.cyBot.YCm -8));
+        else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm +8, this.cyBot.YCm -8));
+        else if(this._cyBot.angle > 135 || (this._cyBot.angle < 0 && this._cyBot.angle >= -45))
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm -8 , this.cyBot.YCm +8));
+
     }
     else if(msg == 'r'){
-      // TODO add short obstacle
+        if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm - 8, this._cyBot.YCm +8));
+        else if(this.cyBot.angle > -135 &&  this._cyBot.angle < -45)
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm +8, this.cyBot.YCm -8));
+        else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm +8, this.cyBot.YCm +8));
+        else if(this._cyBot.angle > 135 || (this._cyBot.angle < 0 && this._cyBot.angle >= -45))
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm -8 , this.cyBot.YCm -8));
     }
     else if(msg == 'b'){
-      // TODO add short obstacle
+        if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm , this._cyBot.YCm +8));
+        else if(this.cyBot.angle > -135 &&  this._cyBot.angle < -45)
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm , this.cyBot.YCm -8));
+        else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm , this.cyBot.YCm +8));
+        else if(this._cyBot.angle > 135 || (this._cyBot.angle < 0 && this._cyBot.angle >= -45))
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm  , this.cyBot.YCm -8));
     }
-    //TODO TEST
     else{
       this.getUnknownMessage("bump " +msg);
     }
