@@ -39,7 +39,9 @@ export class CanvasComponent implements OnInit {
   }
 
   animate(): void {
+    this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.scenario.drawElements(this.ctx);
+    this.ctx.beginPath();
   }
 
 
