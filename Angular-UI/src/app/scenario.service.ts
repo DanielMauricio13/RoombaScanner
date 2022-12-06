@@ -86,7 +86,6 @@ export class ScenarioService {
    */
   onClick(ev:MouseEvent){
     console.log(" " + ev.offsetX + " " + ev.offsetY);
-    if(!this._moving) {
 
 
       let newXCm = (ev.x - 10) / scale;
@@ -98,10 +97,7 @@ export class ScenarioService {
 
       this.goToXYCM(newXCm, newYCm);
 
-    }
-    else{
-      console.log("CyBot is not ready to receive instructions!");
-    }
+
 
   }
 
@@ -139,7 +135,6 @@ export class ScenarioService {
     msg = msg.replace("END", "");
     msg = msg.trim();
 
-    console.log("Message: "  + msg);
 
     if(msg.startsWith("obj")){
       this.getTallObstacleMessage(msg);
@@ -240,6 +235,7 @@ export class ScenarioService {
   getAmountMoved(msg: string){
     msg = msg.replace("move", "");
     msg = msg.trim();
+    console.log("Moved: " + msg);
 
     var dist = Number(msg.replace(/[^0-9\.]+/g,""));
     this._cyBot.move(dist);
@@ -253,9 +249,9 @@ export class ScenarioService {
    * @param msg
    */
   getAmountTurned(msg: string){
-    console.log("Turned: " + msg);
     msg = msg.replace("turn", "");
     msg = msg.trim();
+    console.log("Turned: " + msg);
     var angle = Number(msg.replace(/[^0-9\.]+/g,""));
 
     this._cyBot.turn(angle);
