@@ -109,7 +109,7 @@ float move_forwards(oi_t *sensor_F, int centimeters, float a, float b){
             }
 
             //cliff sensors
-            /*if (sensor_F->cliffLeft){
+            if (sensor_F->cliffLeft){
                 stopFlag = '1';
                 oi_setWheels(0, 0); //set wheels to 0
                 return sum/10;
@@ -128,7 +128,7 @@ float move_forwards(oi_t *sensor_F, int centimeters, float a, float b){
                 stopFlag = '4';
                 oi_setWheels(0, 0); //set wheels to 0
                 return sum/10;
-            }*/
+            }
 
 
             //sweep sensor
