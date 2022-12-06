@@ -102,8 +102,8 @@ export class ScenarioService {
     console.log(" " + ev.offsetX + " " + ev.offsetY);
 
 
-      let newXCm = (ev.x - 10) / scale;
-      let newYCm = (ev.y - 75.5) / scale;
+      let newXCm = (ev.x) / scale;
+      let newYCm = (ev.y) / scale;
 
       let mAngle = this._cyBot.angle;
 
@@ -122,14 +122,21 @@ export class ScenarioService {
     let xChange = xCm - cyX;
     let yChange = yCm - cyY;
 
-    let angleChange = Math.atan2(yChange , xChange);
+
 
     let distance = Math.sqrt(xChange * xChange + yChange * yChange) - 20;
 
+    let angleChange = Math.atan2(yChange, xChange); //math.atan2 takes delta y, delta x
     let cyBotAngle = this._cyBot.angle;
 
-    let newAngle = (cyBotAngle + (angleChange * 180 / Math.PI)) % 360;
+    let newAngle = ((angleChange * 180 / Math.PI) - cyBotAngle);
 
+    if(newAngle > 180){
+      newAngle = -1 * (360 - newAngle);
+    }
+    else if(newAngle < -180){
+      newAngle = -1 * (-360 - newAngle);
+    }
     console.log("Found: " + angleChange + "xchange, ychange" + xChange + " "  + yChange);
     console.log("Found: angle: " + newAngle + ", distance " + distance);
     this.socketService.sendMessage("" + parseInt(String(newAngle))+ ","+ parseInt(String(distance)) + "q" +"\r\n");
@@ -182,6 +189,8 @@ export class ScenarioService {
 
     msg = msg.replace("obj", "");
     msg = msg.trim();
+
+    console.log("Received Object (angle, distance):" + msg);
     let textTemp1= msg.substring(0, msg.indexOf(','));
     let angle= parseInt(textTemp1);
     msg= msg.replace(textTemp1+ ',', "");
@@ -215,7 +224,7 @@ export class ScenarioService {
 
     }
     this._tallObstacles.push(new TallObstacle(tempX,tempY,width))
-    console.log("Received Object (angle, distance):" + msg);
+
     //TODO TEST
   }
 
@@ -287,7 +296,7 @@ export class ScenarioService {
     msg = msg.replace("turn", "");
     msg = msg.trim();
     console.log("Turned: " + msg);
-    var angle = Number(msg.replace(/[^0-9\.]+/g,""));
+    var angle = Number(msg);
 
     this._cyBot.turn(angle);
     //TODO TEST

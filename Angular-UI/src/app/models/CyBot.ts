@@ -23,7 +23,7 @@ export class CyBot extends Drawable{
     let mAngle = this._angle + angle;
     //  Force angle to between +- 180
     if(mAngle > 180){
-      mAngle = -1 * 360 - mAngle;
+      mAngle = -1 * (360 - mAngle);
     }
     else if(mAngle < -180){
       mAngle = -1 * (-360 - mAngle);
