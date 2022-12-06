@@ -15,7 +15,7 @@ export class Drawable {
 
     ctx.beginPath();
     ctx.fillStyle = this.color;
-    ctx.arc(this.yCm * scale, this.xCm * scale, this.width * scale, 0, 2 * Math.PI);
+    ctx.arc(this.xCm * scale, this.yCm * scale, this.width * scale, 0, 2 * Math.PI);
     ctx.fill();
     ctx.stroke();
   }

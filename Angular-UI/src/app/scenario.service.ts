@@ -238,14 +238,8 @@ export class ScenarioService {
     msg = msg.trim();
     console.log("Bump:\n\tCybot Location" + this._cyBot.XCm + " " + this._cyBot.YCm + " " + this._cyBot.angle + "\n\tBump: " + msg);
    if(msg == 'l'){
-        if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm + 8, this._cyBot.YCm +8));
-        else if(this.cyBot.angle > -135 &&  this._cyBot.angle < -45)
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm -8, this.cyBot.YCm -8));
-        else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm +8, this.cyBot.YCm -8));
-        else if(this._cyBot.angle > 135 || (this._cyBot.angle < 0 && this._cyBot.angle >= -45))
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm -8 , this.cyBot.YCm +8));
+
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm  , this.cyBot.YCm ));
 
     }
     else if(msg == 'r'){
@@ -313,6 +307,7 @@ export class ScenarioService {
     msg = msg.replace("cliff", "");
     msg = msg.trim();
 
+
     let cyX = this._cyBot.XCm;
     let cyY = this._cyBot.YCm;
 
@@ -322,27 +317,27 @@ export class ScenarioService {
     let cyBotAngle = this._cyBot.angle;
 
     if(msg == "ll"){
-      clX=cyX+40*Math.sin(((cyBotAngle-70)*Math.PI)/180);
-      clY=cyY-40*Math.cos(((cyBotAngle-70)*Math.PI)/180);
+      clX=cyX+20*Math.cos(((cyBotAngle-70)*Math.PI)/180);
+      clY=cyY-20*Math.sin(((cyBotAngle-70)*Math.PI)/180);
     }
-    if(msg == "ml"){
-      clX=cyX+40*Math.sin(((cyBotAngle-25)*Math.PI)/180);
-      clY=cyY-40*Math.cos(((cyBotAngle-25)*Math.PI)/180);
+    else if(msg == "ml"){
+      clX=cyX+20*Math.cos(((cyBotAngle-25)*Math.PI)/180);
+      clY=cyY-20*Math.sin(((cyBotAngle-25)*Math.PI)/180);
     }
-    if(msg == "mr"){
-      clX=cyX+40*Math.sin(((cyBotAngle+25)*Math.PI)/180);
-      clY=cyY-40*Math.cos(((cyBotAngle+25)*Math.PI)/180);
+    else if(msg == "mr"){
+      clX=cyX+20*Math.cos(((cyBotAngle+25)*Math.PI)/180);
+      clY=cyY-20*Math.sin(((cyBotAngle+25)*Math.PI)/180);
     }
-    if(msg == "rr"){
-      clX=cyX+40*Math.sin(((cyBotAngle+70)*Math.PI)/180);
-      clY=cyY-40*Math.cos(((cyBotAngle+70)*Math.PI)/180);
+    else if(msg == "rr"){
+      clX=cyX+20*Math.cos(((cyBotAngle+70)*Math.PI)/180);
+      clY=cyY-20*Math.sin(((cyBotAngle+70)*Math.PI)/180);
     }
     else{
       clX = -1;
       clY = -1;
     }
     this._cliffs.push(new Cliff(clX, clY));
-    console.log("Detected Cliff at Sensor:" + msg);
+    console.log("Detected Cliff at Sensor:\n\tCybot: " + cyX + " " + cyY + " " + cyBotAngle + "\n\tcliff: " + clX + " " + clY + " " + msg);
 
   }
 
