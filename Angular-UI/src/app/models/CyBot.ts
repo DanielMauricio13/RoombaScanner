@@ -36,8 +36,8 @@ export class CyBot extends Drawable{
     ctx.fillStyle = this.color;
     ctx.arc(this.xCm * scale, this.yCm * scale, this.width * scale, 0, 2 * Math.PI);
     ctx.fill();
-    ctx.stroke();
     this.draw_arrow(ctx, this.xCm* scale, this.yCm * scale, this._angle, 15);
+    ctx.stroke();
   }
 
   get angle(){

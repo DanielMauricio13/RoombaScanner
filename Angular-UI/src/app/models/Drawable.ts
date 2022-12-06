@@ -13,6 +13,7 @@ export class Drawable {
    */
   draw(ctx: CanvasRenderingContext2D) {
 
+    ctx.beginPath();
     ctx.fillStyle = this.color;
     ctx.arc(this.yCm * scale, this.xCm * scale, this.width * scale, 0, 2 * Math.PI);
     ctx.fill();
@@ -33,6 +34,8 @@ export class Drawable {
   }
 
   draw_arrow(ctx: CanvasRenderingContext2D, fromx: number, fromy: number, angle: number, r: number) {
+    ctx.beginPath();
+
     let headLen = 10;
     let toX = Math.cos(angle * Math.PI / 180) * r + fromx;
     let toY = Math.sin(angle * Math.PI / 180)* r + fromy;

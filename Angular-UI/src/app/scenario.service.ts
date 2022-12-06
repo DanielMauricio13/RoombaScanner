@@ -236,6 +236,7 @@ export class ScenarioService {
   getBumpMessage(msg: string){
     msg = msg.replace("bump", "");
     msg = msg.trim();
+    console.log("Bump:\n\tCybot Location" + this._cyBot.XCm + " " + this._cyBot.YCm + " " + this._cyBot.angle + "\n\tBump: " + msg);
    if(msg == 'l'){
         if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
           this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm + 8, this._cyBot.YCm +8));
@@ -281,7 +282,7 @@ export class ScenarioService {
     msg = msg.trim();
     console.log("Moved: " + msg);
 
-    var dist = Number(msg.replace(/[^0-9\.]+/g,""));
+    var dist = Number(msg);
     this._cyBot.move(dist);
 
     //TODO TEST
