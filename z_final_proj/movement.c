@@ -85,7 +85,7 @@ float move_forwards(oi_t *sensor_F, int centimeters, float a, float b){
 	timer_waitMillis(100);
 
     if (centimeters>0){ // move forwards
-        oi_setWheels(100, 100);
+        oi_setWheels(50, 50);
 
         while (sum < centimeters) {
             oi_update(sensor_F);
@@ -166,7 +166,7 @@ float move_forwards(oi_t *sensor_F, int centimeters, float a, float b){
         }
     }
     else{ //move backwards
-        oi_setWheels(-100, -100);
+        oi_setWheels(-50, -50);
 
         while (sum > centimeters) {
             oi_update(sensor_F);
