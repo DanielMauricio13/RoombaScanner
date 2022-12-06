@@ -13,12 +13,8 @@ export class Cliff extends Drawable{
 
   override draw(ctx: CanvasRenderingContext2D) {
 
-    ctx.font = "15px calibri";
-    ctx.strokeText("x", this.xCm, this.yCm);
-    
-    ctx.fillStyle = this.color;
-
-    ctx.fill();
-    ctx.stroke();
+    ctx.font = "30px Comic Sans MS";
+    ctx.fillStyle = "red";
+    ctx.fillText("x", this.xCm, this.yCm);
   }
 }
