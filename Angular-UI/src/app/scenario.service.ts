@@ -122,8 +122,7 @@ export class ScenarioService {
 
     console.log("Found: " + angleChange + "xchange, ychange" + xChange + " "  + yChange);
     console.log("Found: angle: " + newAngle + ", distance " + distance);
-    this.socketService.sendMessage( parseInt(String(newAngle)) + "d" +"\r\n");
-    this.socketService.sendMessage(distance + "w" + "\r\n");
+    this.socketService.sendMessage("" + parseInt(String(newAngle))+ ","+ parseInt(String(distance)) + "q" +"\r\n");
 
     this._moving = true;
 
