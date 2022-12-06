@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {TallObstacle} from "./models/TallObstacle";
+import {Cliff} from './models/Cliff';
 import {CyBot} from "./models/CyBot";
 import {SocketioService} from "./socketio.service";
 import {scale} from "./Constants";
@@ -14,6 +15,7 @@ export class ScenarioService {
 
   private _tallObstacles: TallObstacle[];
   private _shortObstacles: ShortObstacle[];
+  private _cliffs: Cliff[];
   private _cyBot!: CyBot;
   private _moving: boolean;
   updateGui: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
@@ -23,6 +25,7 @@ export class ScenarioService {
 
     this._tallObstacles = [];
     this._shortObstacles = [];
+    this._cliffs = [];
 
     this.cyBot = new CyBot(20, 20);
     this.socketService.sharedMessage.subscribe(value => {
@@ -57,6 +60,13 @@ export class ScenarioService {
     this._shortObstacles.push(obstacle);
   }
 
+  get cliffs(): Cliff[] {
+    return this._cliffs;
+  }
+  addCliff(xCm:number, yCm:number){
+    this._cliffs.push(cliff);
+  }
+
   /**
    * Draw all drawable elements on the canvas
    * @param ctx
@@ -73,6 +83,10 @@ export class ScenarioService {
 
     this.shortObstacles.forEach((obstacle) =>{
       obstacle.draw(ctx);
+    });
+
+    this.cliffs.forEach((cliff) =>{
+      cliff.draw(ctx);
     });
 
   }
@@ -288,20 +302,33 @@ export class ScenarioService {
   getCliffMessage(msg: string){
     msg = msg.replace("cliff", "");
     msg = msg.trim();
-    console.log("CLIFF HIT");
+
+    let cyX = this._cyBot.XCm;
+    let cyY = this._cyBot.YCm;
+
+    let clX;
+    let clY;
+
+    let cyBotAngle = this._cyBot.angle;
 
     if(msg == "ll"){
-      // TODO plot line for cliff
+      clX=cyX-40*Math.sin(((cyBotAngle-70)*Math.PI)/180);
+      clY=cyY+40*Math.cos(((cyBotAngle-70)*Math.PI)/180);
     }
     else if(msg == "ml"){
-      // TODO Plot line for cliff
+      clX=cyX-40*Math.sin(((cyBotAngle-25)*Math.PI)/180);
+      clY=cyY+40*Math.cos(((cyBotAngle-25)*Math.PI)/180);
     }
     else if(msg == "mr"){
-      // TODO plot line for cliff
+      clX=cyX-40*Math.sin(((cyBotAngle+25)*Math.PI)/180);
+      clY=cyY+40*Math.cos(((cyBotAngle+25)*Math.PI)/180);
     }
     else if(msg == "rr"){
-      // TODO plot line for cliff
+      clX=cyX-40*Math.sin(((cyBotAngle+70)*Math.PI)/180);
+      clY=cyY+40*Math.cos(((cyBotAngle+70)*Math.PI)/180);
     }
+    this._cliffs.push(new Cliff(clX,clY));
+    console.log("Detected Cliff at Sensor:" + msg);
 
   }
 
