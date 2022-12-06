@@ -236,13 +236,13 @@ export class ScenarioService {
     }
     else if(msg == 'b'){
         if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm , this._cyBot.YCm +8));
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm , this._cyBot.YCm -8));
         else if(this.cyBot.angle > -135 &&  this._cyBot.angle < -45)
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm , this.cyBot.YCm -8));
-        else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
           this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm , this.cyBot.YCm +8));
+        else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm - 8, this.cyBot.YCm ));
         else if(this._cyBot.angle > 135 || (this._cyBot.angle < 0 && this._cyBot.angle >= -45))
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm  , this.cyBot.YCm -8));
+          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm +8 , this.cyBot.YCm ));
     }
     else{
       this.getUnknownMessage("bump " +msg);
