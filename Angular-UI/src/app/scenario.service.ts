@@ -324,23 +324,19 @@ export class ScenarioService {
       clX=cyX+40*Math.sin(((cyBotAngle-70)*Math.PI)/180);
       clY=cyY-40*Math.cos(((cyBotAngle-70)*Math.PI)/180);
     }
-    else if(msg == "ml"){
+    if(msg == "ml"){
       clX=cyX+40*Math.sin(((cyBotAngle-25)*Math.PI)/180);
       clY=cyY-40*Math.cos(((cyBotAngle-25)*Math.PI)/180);
     }
-    else if(msg == "mr"){
+    if(msg == "mr"){
       clX=cyX+40*Math.sin(((cyBotAngle+25)*Math.PI)/180);
       clY=cyY-40*Math.cos(((cyBotAngle+25)*Math.PI)/180);
     }
-    else if(msg == "rr"){
+    if(msg == "rr"){
       clX=cyX+40*Math.sin(((cyBotAngle+70)*Math.PI)/180);
       clY=cyY-40*Math.cos(((cyBotAngle+70)*Math.PI)/180);
     }
-    else{
-      clX=-1;
-      clY=-1;
-    }
-    this._cliffs.push(new Cliff(clX,clY));
+    this._cliffs.push(new Cliff(clX, clY));
     console.log("Detected Cliff at Sensor:" + msg);
 
   }
