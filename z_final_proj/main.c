@@ -15,7 +15,7 @@ extern volatile int uart_event;
 extern volatile char uart_data;
 extern volatile char stopFlag;
 
-const float a_las=1569377.5, b_las=-1.498272; //set this up in a different file (lab 8 main)
+const float a_las=7321145, b_las=-1.802885; //set this up in a different file (lab 8 main)
 const float degToRad = 3.141592653/180;
 const int minObjDist = 55; //minimum distance detected by ping sensor for something to be considered an "object"
 
@@ -151,6 +151,15 @@ void main(){
 
 	amountMoved = 0;
 	uart_sendStr("Input: ");
+	
+	char notes[] = {74, 65, 67, 1, 67, 61, 60, 53, '\0'};
+	char duration[] = {64, 32, 14, 2, 80, 32, 32, 64, '\0'};
+	
+	free(notes);
+	free(duration);
+	
+	oi_loadSong(0, 8, notes, duration);
+	
     while(1){
 
         if (uart_event){ //if putty detects a keypress
@@ -291,6 +300,7 @@ void main(){
                 }
                 if (stopFlag != '\0'){
                     uart_sendStr("START move ");
+					oi_play_song(0);
                     amountMoved = move_forwards(sensor_data, -15, a_las, b_las);
                     sprintf(puttyIn, "%f ", amountMoved);
                     uart_sendStr(puttyIn);
