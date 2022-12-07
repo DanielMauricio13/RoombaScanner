@@ -101,7 +101,7 @@ int measure_data(){
         timer_waitMillis(100);
 
 
-        tObject[i].width = tObject[i].objDist * 2 * sin( (tObject[i].stopAng - tObject[i].startAng)*degToRad/2 ); //measures width of object (cm)
+        tObject[i].width = (tObject[i].objDist+4) * 2 * tan( (tObject[i].stopAng - tObject[i].startAng)*degToRad/2 ); //measures width of object (cm)
 
 
         strcpy(puttyIn,"");
