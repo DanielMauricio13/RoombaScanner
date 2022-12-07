@@ -51,32 +51,51 @@ void move_forward(oi_t *sensor_F, int centimeters)
     oi_setWheels(0, 0); //set wheels to 0
 }
 
+
 void move_noBump(oi_t *sensor_F, int centimeters)
 {
-    if (centimeters>0){ // move forwards
-        oi_setWheels(150, 150);
+    int lWheelSpeed=50, rWheelSpeed=50;
+    float sum=0, angleDeviation = 0;
+    centimeters = centimeters*10;
 
-        centimeters = centimeters*10;
-        double sum=0;
+    if (centimeters>0){ // move forwards
 
         while (sum < centimeters) {
+            oi_setWheels(rWheelSpeed, lWheelSpeed);
             oi_update(sensor_F);
             sum += sensor_F->distance;
-            lcd_init();
+            angleDeviation -= sensor_F->angle;
+
+            //angle correction
+            //if turning left, sensor angle goes up (left wheel has to spin faster)
+            if (angleDeviation>0){
+                lWheelSpeed -= 1;
+            }
+            else if (angleDeviation<0){
+                lWheelSpeed += 1;
+            }
+            //lcd_printf("dev: %f\nright: %d\nleft: %d", angleDeviation, rWheelSpeed, lWheelSpeed);
+            angleDeviation = 0;
+
             lcd_printf("%f", sum);
         }
     }
     else{ //move backwards
-        oi_setWheels(-150, -150);
-
-        centimeters = centimeters*10;
-        double sum=0;
+        lWheelSpeed=-50, rWheelSpeed=-50;
 
         while (sum > centimeters) {
+            oi_setWheels(rWheelSpeed, lWheelSpeed);
             oi_update(sensor_F);
             sum += sensor_F->distance;
-            lcd_init();
-            lcd_printf("%f", sum);
+            angleDeviation -= sensor_F->angle;
+
+            if (angleDeviation>0){
+                lWheelSpeed -= 1;
+            }
+            else if (angleDeviation<0){
+                lWheelSpeed += 1;
+            }
+            angleDeviation = 0;
         }
     }
 

@@ -3,8 +3,8 @@
 #include "sensor.h"
 volatile int overflow_event;
 
-volatile float tMin = 0.75;
-volatile float tMax = 2.25;
+volatile float tMin = 0.475020;
+volatile float tMax = 2.491653;
 
 
 
@@ -258,6 +258,7 @@ void servo_calibrate(void){
         TIMER1_TBMATCHR_R = convert & 0xFFFF;
         TIMER1_TBPMR_R =  (convert & 0xFF0000) >> 16;
     }
+    lcd_printf("tMin: %f\ntMax: %f", tMin, tMax);
 }
 
 

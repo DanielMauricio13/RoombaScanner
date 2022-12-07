@@ -15,7 +15,13 @@ extern volatile int uart_event;
 extern volatile char uart_data;
 extern volatile char stopFlag;
 
-const float a_las=7321145, b_las=-1.802885; //set this up in a different file (lab 8 main)
+//set this up in a different file (lab 8 main)
+//BOT 8:
+const float a_las=1862896.375, b_las=-1.523016;
+
+//BOT 10: //const float a_las=7321145, b_las=-1.802885;
+
+
 const float degToRad = 3.141592653/180;
 const int minObjDist = 55; //minimum distance detected by ping sensor for something to be considered an "object"
 
@@ -127,6 +133,7 @@ int measure_data(){
 
 
 
+
 void main(){
     init_sensors();
     timer_init();
@@ -141,8 +148,6 @@ void main(){
     oi_t *sensor_data = oi_alloc();
     oi_init(sensor_data);
 
-    //uart_sendStr("START high long message here with a lot og characters END");
-
     int numChars=0;
 	int amountScanned;
 	float amountMoved;
@@ -152,13 +157,21 @@ void main(){
 	amountMoved = 0;
 	uart_sendStr("Input: ");
 	
-	char notes[] = {74, 65, 67, 1, 67, 61, 60, 53, '\0'};
-	char duration[] = {64, 32, 14, 2, 80, 32, 32, 64, '\0'};
+	char notes[] = {74, 67, '\0'};
+	char duration[] = {64, 80, '\0'};
 	
 	free(notes);
 	free(duration);
 	
-	oi_loadSong(0, 8, notes, duration);
+	oi_loadSong(0, 2, notes, duration);
+
+	//calibration for cliff analog value (in movement.c) and servo tmax/min (in sensor.c)
+	/*amountDo = sensor_data->cliffLeftSignal;
+	amountDo = sensor_data->cliffFrontLeftSignal;
+	amountDo = sensor_data->cliffFrontRightSignal;
+	amountDo = sensor_data->cliffRightSignal;
+
+	servo_calibrate();*/
 	
     while(1){
 
