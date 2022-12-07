@@ -34,6 +34,11 @@ export class CanvasComponent implements OnInit {
     this.canvas.nativeElement.addEventListener("click", ev => {
         this.scenario.onClick(ev);
     });
+    this.canvas.nativeElement.addEventListener("contextmenu", ev=> {
+        ev.preventDefault();
+        this.scenario.onRightClick(ev);
+        return false;
+    });
 
     this.animate();
   }
