@@ -253,7 +253,7 @@ export class ScenarioService {
     msg = msg.trim();
     console.log("Bump:\n\tCybot Location" + this._cyBot.XCm + " " + this._cyBot.YCm + " " + this._cyBot.angle + "\n\tBump: " + msg);
     let bumpOffset = 16; //offset for x or y direction (2b^2 = ((32+13)/2)^2 where {32=len of bot} and {13=len of short obj})
-    
+
     if(msg == 'l'){
       if( 45 <= this._cyBot.angle && this._cyBot.angle <= 135) //bot facing up
         this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm - bumpOffset, this._cyBot.YCm + bumpOffset));
@@ -281,8 +281,8 @@ export class ScenarioService {
         this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm - bumpOffset , this.cyBot.YCm + bumpOffset));
     }
 
-    else if(msg == 'l'){
-      bumpOffset = 22; //offset for x or y direction (2b = (32+13)/2 where {32=len of bot} and {13=len of short obj}) 
+    else if(msg == 'b'){
+      bumpOffset = 22; //offset for x or y direction (2b = (32+13)/2 where {32=len of bot} and {13=len of short obj})
       if( 45 <= this._cyBot.angle && this._cyBot.angle <= 135) //bot facing up
         this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm, this._cyBot.YCm + bumpOffset));
 
