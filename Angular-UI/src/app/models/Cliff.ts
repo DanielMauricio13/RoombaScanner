@@ -15,6 +15,7 @@ export class Cliff extends Drawable{
 
     ctx.font = "30px Comic Sans MS";
     ctx.fillStyle = "red";
+
     ctx.fillText("x", this.xCm * scale, this.yCm * scale);
   }
 }

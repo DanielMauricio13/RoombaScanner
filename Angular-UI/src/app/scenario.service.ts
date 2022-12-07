@@ -190,7 +190,7 @@ export class ScenarioService {
     msg = msg.replace("obj", "");
     msg = msg.trim();
 
-    console.log("Received Object (angle, distance):" + msg);
+
     let textTemp1= msg.substring(0, msg.indexOf(','));
     let angle= parseInt(textTemp1);
     msg= msg.replace(textTemp1+ ',', "");
@@ -200,30 +200,33 @@ export class ScenarioService {
     let width= parseInt(msg);
     let tempX;
     let tempY;
+    console.log("Received Object at angle:"+ angle + " " + " at distance: " + distance + " with a width of: " + width);
     if(angle >0){
-      tempY= Math.sin(angle) * distance;
+      tempY= Math.sin(angle * Math.PI / 180) * distance + Math.sin(this._cyBot.angle * Math.PI / 180) * 15;
       tempY=this._cyBot.YCm + tempY;
-      let c= (distance * distance) - ( tempY * tempY);
-      c= Math.sqrt(c);
+      let c = Math.cos(angle * Math.PI / 180) * distance + Math.cos(this._cyBot.angle * Math.PI / 180) * 15;
+
       if(angle > 90)
-        tempX= this._cyBot.YCm - c;
+        tempX= this._cyBot.XCm - c;
       else
-        tempX= this._cyBot.YCm + c;
+        tempX= this._cyBot.XCm + c;
 
     }
     else{
       angle= angle * -1;
-      tempY= Math.sin(angle) * distance;
+      tempY= Math.sin(angle * Math.PI / 180) * distance + Math.sin(this._cyBot.angle * Math.PI / 180) * 15;
       tempY=this._cyBot.YCm - tempY;
-      let c= (distance * distance) - ( tempY * tempY);
-      c= Math.sqrt(c);
+      let c = Math.cos(angle * Math.PI / 180) * distance + Math.cos(this._cyBot.angle * Math.PI / 180) * 15;
+      // let c= Math.abs((distance * distance) - ( tempY * tempY));
+      // c= Math.sqrt(c);
       if(angle > -90)
-        tempX= this._cyBot.YCm + c;
+        tempX= this._cyBot.XCm + c;
       else
-        tempX= this._cyBot.YCm - c;
+        tempX= this._cyBot.XCm - c;
 
     }
-    this._tallObstacles.push(new TallObstacle(tempX,tempY,width))
+    console.log("tall Object: x: " +tempX + " y " + tempY +"\n\t Cybot: " + this._cyBot.XCm + " " +this._cyBot.YCm + " " + this._cyBot.angle);
+    this._tallObstacles.push(new TallObstacle(tempX, tempY, width))
 
     //TODO TEST
   }
@@ -239,7 +242,14 @@ export class ScenarioService {
     console.log("Bump:\n\tCybot Location" + this._cyBot.XCm + " " + this._cyBot.YCm + " " + this._cyBot.angle + "\n\tBump: " + msg);
    if(msg == 'l'){
 
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm  , this.cyBot.YCm ));
+     if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
+       this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm + 8, this._cyBot.YCm +8));
+     else if(this.cyBot.angle > -135 &&  this._cyBot.angle < -45)
+       this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm -8, this.cyBot.YCm -8));
+     else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
+       this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm +8, this.cyBot.YCm -8));
+     else if(this._cyBot.angle > 135 || (this._cyBot.angle < 0 && this._cyBot.angle >= -45))
+       this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm -8 , this.cyBot.YCm +8));
 
     }
     else if(msg == 'r'){
@@ -316,27 +326,10 @@ export class ScenarioService {
 
     let cyBotAngle = this._cyBot.angle;
 
-    if(msg == "ll"){
-      clX=cyX+20*Math.cos(((cyBotAngle-70)*Math.PI)/180);
-      clY=cyY-20*Math.sin(((cyBotAngle-70)*Math.PI)/180);
-    }
-    else if(msg == "ml"){
-      clX=cyX+20*Math.cos(((cyBotAngle-25)*Math.PI)/180);
-      clY=cyY-20*Math.sin(((cyBotAngle-25)*Math.PI)/180);
-    }
-    else if(msg == "mr"){
-      clX=cyX+20*Math.cos(((cyBotAngle+25)*Math.PI)/180);
-      clY=cyY-20*Math.sin(((cyBotAngle+25)*Math.PI)/180);
-    }
-    else if(msg == "rr"){
-      clX=cyX+20*Math.cos(((cyBotAngle+70)*Math.PI)/180);
-      clY=cyY-20*Math.sin(((cyBotAngle+70)*Math.PI)/180);
-    }
-    else{
-      clX = -1;
-      clY = -1;
-    }
-    this._cliffs.push(new Cliff(clX, clY));
+    clX=cyX;
+    clY=cyY;
+
+    this._cliffs.push(new Cliff(clX+10, clY+10));
     console.log("Detected Cliff at Sensor:\n\tCybot: " + cyX + " " + cyY + " " + cyBotAngle + "\n\tcliff: " + clX + " " + clY + " " + msg);
 
   }
