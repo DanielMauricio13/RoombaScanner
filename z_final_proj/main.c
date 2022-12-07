@@ -135,6 +135,11 @@ int measure_data(){
 
 
 void main(){
+    //SYSCTL_RCGCUART_R |= 0b10;      // enable clock UART1 (page 344)
+    //SYSCTL_RCGCGPIO_R |= 0b10;      // enable clock GPIOB (page 340)
+    //GPIO_PORTB_DEN_R |= 0b10000000;        // enables pb7
+    //GPIO_PORTB_DIR_R |= 0b10000000;        // sets pb7 as output
+    //GPIO_PORTB_DATA_R |= 0b10000000;        // sets pb7 high (reset)
     init_sensors();
     timer_init();
     lcd_init();
@@ -148,11 +153,13 @@ void main(){
     oi_t *sensor_data = oi_alloc();
     oi_init(sensor_data);
 
+
+
     int numChars=0;
 	int amountScanned;
 	float amountMoved;
     char whatDo;
-    int amountDo;
+    int amountDo, amountDo2;
 
 	amountMoved = 0;
 	uart_sendStr("Input: ");
@@ -164,6 +171,9 @@ void main(){
 	free(duration);
 	
 	oi_loadSong(0, 2, notes, duration);
+
+    char * amounts; //creates pointer "amounts" that stores data based on comma delimiter
+    char * str = malloc(21 * sizeof(char));
 
 	//calibration for cliff analog value (in movement.c) and servo tmax/min (in sensor.c)
 	/*amountDo = sensor_data->cliffLeftSignal;
@@ -189,13 +199,12 @@ void main(){
 				whatDo = puttyIn[numChars-2]; //converts last user input before enter key into a command
 
 				//creates pointer str that will have relevant puttyIn data copied into it
-				char * str = malloc(numChars * sizeof(char));
 				strcpy(str, puttyIn);
 
 				//removes whitespace in front of str (shouldn't be an issue because str is directly copied from puttyIn
 				//while(isspace((unsigned char)str)) str++;
 
-				char * amounts;                     //creates pointer "amounts" that stores data based on comma delimiter
+
 				amounts = strtok(str, ",");         //fills "amounts" pointer with any data from "str" (puttyIn) until comma
 				amountDo = atoi(amounts);           //converts "amounts" string into integer
 				//testing
@@ -204,14 +213,12 @@ void main(){
 
 
 				amounts = strtok(NULL, ",");        //In the next call to strtok, the first parameter needs to be NULL so that strtok starts splitting the string from the next token's starting position it remembers.
-				int amountDo2 =  atoi(amounts);     //converts new "amounts" string into integer
+				amountDo2 =  atoi(amounts);     //converts new "amounts" string into integer
 				//testing
 				/*sprintf(puttyIn, "%d %d", amountDo, amountDo2);
                 uart_sendStr(puttyIn);*/
 
 				//frees str and amounts pointers
-				free(str);
-				free(amounts);
 
 				uart_sendChar('\r');
 				uart_sendChar('\n');
@@ -239,7 +246,7 @@ void main(){
                         uart_sendStr("END\n\r");
                         break;
 
-                case ('w'): //w is move forwards (cm)
+                /*case ('w'): //w is move forwards (cm)
                         uart_sendStr("START move ");
 
                         amountMoved = move_forwards(sensor_data, amountDo, a_las, b_las);
@@ -280,10 +287,14 @@ void main(){
                 case ('c'): //calibrate
                         uart_sendStr("Calibrating\r\n\n");
                         servo_calibrate();
-                        break;
+                        break;*/
 
-                case ('f'):
+                case ('f'): //frees all data and then reinitializes robot
                     oi_free(sensor_data);
+                    free(str);
+                    free(amounts);
+                    str = NULL;
+                    amounts = NULL;
                     break;
 
                 default:
@@ -346,6 +357,9 @@ void main(){
 				numChars=0; //reset
 				uart_sendStr("START READY END\r\n\nInput: ");
             }
+            //GPIO_PORTB_DEN_R |= 0b10000000;        // enables pb7
+            //GPIO_PORTB_DIR_R |= 0b10000000;        // sets pb7 as output
+            //GPIO_PORTB_DATA_R &= 0b01111111;        // sets pb7 low (reset)
         }
 
 
