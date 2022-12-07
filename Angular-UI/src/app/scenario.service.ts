@@ -329,7 +329,57 @@ export class ScenarioService {
     clX=cyX;
     clY=cyY;
 
-    this._cliffs.push(new Cliff(clX+10, clY+10));
+  if(msg == "ll"){
+      if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
+        this._cliffs.push(new Cliff(this._cyBot.XCm +8, this._cyBot.YCm ));
+      else if(this.cyBot.angle > -135 &&  this._cyBot.angle < -45)
+         this._cliffs.push(new Cliff(this._cyBot.XCm -8, this._cyBot.YCm ));
+      else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
+        this._cliffs.push(new Cliff(this._cyBot.XCm , this.cyBot.YCm -8));
+      else if(this._cyBot.angle > 135 || (this._cyBot.angle < 0 && this._cyBot.angle >= -45))
+        this._cliffs.push(new Cliff(this._cyBot.XCm , this.cyBot.YCm +8));
+  }
+  else if( msg== "ml"){
+      if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
+        this._cliffs.push(new Cliff(this._cyBot.XCm +8, this._cyBot.YCm +2));
+      else if(this.cyBot.angle > -135 &&  this._cyBot.angle < -45)
+         this._cliffs.push(new Cliff(this._cyBot.XCm -8, this._cyBot.YCm  -2));
+      else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
+        this._cliffs.push(new Cliff(this._cyBot.XCm + 8, this.cyBot.YCm -2));
+      else if(this._cyBot.angle > 135 || (this._cyBot.angle < 0 && this._cyBot.angle >= -45))
+        this._cliffs.push(new Cliff(this._cyBot.XCm -8, this.cyBot.YCm +2));
+  }
+  else if( msg== "mr"){
+     if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
+        this._cliffs.push(new Cliff(this._cyBot.XCm -2, this._cyBot.YCm +8));
+      else if(this.cyBot.angle > -135 &&  this._cyBot.angle < -45)
+         this._cliffs.push(new Cliff(this._cyBot.XCm +8, this._cyBot.YCm -2));
+      else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
+        this._cliffs.push(new Cliff(this._cyBot.XCm + 2, this.cyBot.YCm +8));
+      else if(this._cyBot.angle > 135 || (this._cyBot.angle < 0 && this._cyBot.angle >= -45))
+        this._cliffs.push(new Cliff(this._cyBot.XCm -2, this.cyBot.YCm -8));
+  }
+  else if(msg== "rr"){
+     if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
+        this._cliffs.push(new Cliff(this._cyBot.XCm -8, this._cyBot.YCm ));
+      else if(this.cyBot.angle > -135 &&  this._cyBot.angle < -45)
+         this._cliffs.push(new Cliff(this._cyBot.XCm +8, this._cyBot.YCm ));
+      else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
+        this._cliffs.push(new Cliff(this._cyBot.XCm , this.cyBot.YCm +8));
+      else if(this._cyBot.angle > 135 || (this._cyBot.angle < 0 && this._cyBot.angle >= -45))
+        this._cliffs.push(new Cliff(this._cyBot.XCm , this.cyBot.YCm -8));
+  }
+  else {
+      if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
+        this._cliffs.push(new Cliff(this._cyBot.XCm , this._cyBot.YCm +3 ));
+      else if(this.cyBot.angle > -135 &&  this._cyBot.angle < -45)
+         this._cliffs.push(new Cliff(this._cyBot.XCm , this._cyBot.YCm -3 ));
+      else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
+        this._cliffs.push(new Cliff(this._cyBot.XCm  +3, this.cyBot.YCm ));
+      else if(this._cyBot.angle > 135 || (this._cyBot.angle < 0 && this._cyBot.angle >= -45))
+        this._cliffs.push(new Cliff(this._cyBot.XCm -3 , this.cyBot.YCm));
+  }
+
     console.log("Detected Cliff at Sensor:\n\tCybot: " + cyX + " " + cyY + " " + cyBotAngle + "\n\tcliff: " + clX + " " + clY + " " + msg);
 
   }
