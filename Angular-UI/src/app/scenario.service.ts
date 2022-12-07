@@ -201,30 +201,42 @@ export class ScenarioService {
     let tempX;
     let tempY;
     console.log("Received Object at angle:"+ angle + " " + " at distance: " + distance + " with a width of: " + width);
-    if(angle >0){
-      tempY= Math.sin(angle * Math.PI / 180) * distance + Math.sin(this._cyBot.angle * Math.PI / 180) * 15;
-      tempY=this._cyBot.YCm + tempY;
-      let c = Math.cos(angle * Math.PI / 180) * distance + Math.cos(this._cyBot.angle * Math.PI / 180) * 15;
-
-      if(angle > 90)
-        tempX= this._cyBot.XCm - c;
-      else
-        tempX= this._cyBot.XCm + c;
-
+    let tempAng = angle + this._cyBot.angle; //in degrees
+    if (tempAng > 180){
+        tempAng -= 360;
     }
-    else{
-      angle= angle * -1;
-      tempY= Math.sin(angle * Math.PI / 180) * distance + Math.sin(this._cyBot.angle * Math.PI / 180) * 15;
-      tempY=this._cyBot.YCm - tempY;
-      let c = Math.cos(angle * Math.PI / 180) * distance + Math.cos(this._cyBot.angle * Math.PI / 180) * 15;
-      // let c= Math.abs((distance * distance) - ( tempY * tempY));
-      // c= Math.sqrt(c);
-      if(angle > -90)
-        tempX= this._cyBot.XCm + c;
-      else
-        tempX= this._cyBot.XCm - c;
-
+    else if (tempAng < -180){
+        tempAng += 360;
     }
+
+    tempX = this._cyBot.XCm + (distance+16) * Math.cos(tempAng * Math.PI / 180);
+    tempY = this._cyBot.YCm + (distance+16) * Math.cos(tempAng * Math.PI / 180);
+    /**old code
+    *if(angle >0){
+    *  tempY= Math.sin(angle * Math.PI / 180) * distance + Math.sin(this._cyBot.angle * Math.PI / 180) * 15;
+    *  tempY=this._cyBot.YCm + tempY;
+    *  let c = Math.cos(angle * Math.PI / 180) * distance + Math.cos(this._cyBot.angle * Math.PI / 180) * 15;
+    *
+    *  if(angle > 90)
+    *    tempX= this._cyBot.XCm - c;
+    *  else
+    *    tempX= this._cyBot.XCm + c;
+    *
+    *}
+    *else{
+    *  angle= angle * -1;
+    *  tempY= Math.sin(angle * Math.PI / 180) * distance + Math.sin(this._cyBot.angle * Math.PI / 180) * 15;
+    *  tempY=this._cyBot.YCm - tempY;
+    *  let c = Math.cos(angle * Math.PI / 180) * distance + Math.cos(this._cyBot.angle * Math.PI / 180) * 15;
+    *  // let c= Math.abs((distance * distance) - ( tempY * tempY));
+    *  // c= Math.sqrt(c);
+    *  if(angle > -90)
+    *    tempX= this._cyBot.XCm + c;
+    *  else
+    *    tempX= this._cyBot.XCm - c;
+    *
+    *}
+    */
     console.log("tall Object: x: " +tempX + " y " + tempY +"\n\t Cybot: " + this._cyBot.XCm + " " +this._cyBot.YCm + " " + this._cyBot.angle);
     this._tallObstacles.push(new TallObstacle(tempX, tempY, width))
 
@@ -240,37 +252,48 @@ export class ScenarioService {
     msg = msg.replace("bump", "");
     msg = msg.trim();
     console.log("Bump:\n\tCybot Location" + this._cyBot.XCm + " " + this._cyBot.YCm + " " + this._cyBot.angle + "\n\tBump: " + msg);
-   if(msg == 'l'){
+    let bumpOffset = 16; //offset for x or y direction (2b^2 = ((32+13)/2)^2 where {32=len of bot} and {13=len of short obj})
+    
+    if(msg == 'l'){
+      if( 45 <= this._cyBot.angle && this._cyBot.angle <= 135) //bot facing up
+        this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm - bumpOffset, this._cyBot.YCm + bumpOffset));
 
-     if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
-       this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm + 8, this._cyBot.YCm +8));
-     else if(this.cyBot.angle > -135 &&  this._cyBot.angle < -45)
-       this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm -8, this.cyBot.YCm -8));
-     else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
-       this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm +8, this.cyBot.YCm -8));
-     else if(this._cyBot.angle > 135 || (this._cyBot.angle < 0 && this._cyBot.angle >= -45))
-       this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm -8 , this.cyBot.YCm +8));
+      else if(-135 <= this.cyBot.angle &&  this._cyBot.angle <= -45) //bot facing down
+        this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm + bumpOffset, this.cyBot.YCm - bumpOffset));
 
+      else if(-45 < this._cyBot.angle && this._cyBot.angle < 45) //bot facing right
+        this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm + bumpOffset, this.cyBot.YCm + bumpOffset));
+
+      else if(135 < this._cyBot.angle && this._cyBot.angle < 225) //bot facing left
+        this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm - bumpOffset , this.cyBot.YCm - bumpOffset));
     }
     else if(msg == 'r'){
-        if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm - 8, this._cyBot.YCm +8));
-        else if(this.cyBot.angle > -135 &&  this._cyBot.angle < -45)
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm +8, this.cyBot.YCm -8));
-        else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm +8, this.cyBot.YCm +8));
-        else if(this._cyBot.angle > 135 || (this._cyBot.angle < 0 && this._cyBot.angle >= -45))
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm -8 , this.cyBot.YCm -8));
+      if( 45 <= this._cyBot.angle && this._cyBot.angle <= 135) //bot facing up
+        this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm + bumpOffset, this._cyBot.YCm + bumpOffset));
+
+      else if(-135 <= this.cyBot.angle &&  this._cyBot.angle <= -45) //bot facing down
+        this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm - bumpOffset, this.cyBot.YCm - bumpOffset));
+
+      else if(-45 < this._cyBot.angle && this._cyBot.angle < 45) //bot facing right
+        this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm + bumpOffset, this.cyBot.YCm - bumpOffset));
+
+      else if(135 < this._cyBot.angle && this._cyBot.angle < 225) //bot facing left
+        this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm - bumpOffset , this.cyBot.YCm + bumpOffset));
     }
-    else if(msg == 'b'){
-        if( this._cyBot.angle > 45 && this._cyBot.angle <= 135)
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm , this._cyBot.YCm -8));
-        else if(this.cyBot.angle > -135 &&  this._cyBot.angle < -45)
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm , this.cyBot.YCm +8));
-        else if((this._cyBot.angle > 0 && this._cyBot.angle < 45) || (this._cyBot.angle < -135))
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm - 8, this.cyBot.YCm ));
-        else if(this._cyBot.angle > 135 || (this._cyBot.angle < 0 && this._cyBot.angle >= -45))
-          this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm +8 , this.cyBot.YCm ));
+
+    else if(msg == 'l'){
+      bumpOffset = 22; //offset for x or y direction (2b = (32+13)/2 where {32=len of bot} and {13=len of short obj}) 
+      if( 45 <= this._cyBot.angle && this._cyBot.angle <= 135) //bot facing up
+        this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm, this._cyBot.YCm + bumpOffset));
+
+      else if(-135 <= this.cyBot.angle &&  this._cyBot.angle <= -45) //bot facing down
+        this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm, this.cyBot.YCm - bumpOffset));
+
+      else if(-45 < this._cyBot.angle && this._cyBot.angle < 45) //bot facing right
+        this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm + bumpOffset, this.cyBot.YCm));
+
+      else if(135 < this._cyBot.angle && this._cyBot.angle < 225) //bot facing left
+        this._shortObstacles.push(new ShortObstacle(this._cyBot.XCm - bumpOffset , this.cyBot.YCm));
     }
     else{
       this.getUnknownMessage("bump " +msg);
