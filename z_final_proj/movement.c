@@ -1,7 +1,7 @@
 #include "movement.h"
 
 volatile char stopFlag;
-int cliffBig = 2700;
+int cliffBig = 2700; //value for white under cliff sensor
 
 float turn_clockwise(oi_t *sensor_T, int degrees){
     float sum=0;
@@ -11,10 +11,10 @@ float turn_clockwise(oi_t *sensor_T, int degrees){
         oi_setWheels(50, -50); // turn left (right wheel forwards)
         while (sum > degrees) {
             oi_update(sensor_T);
-            sum -= sensor_T->angle;
+            sum -= sensor_T->angle; //updates angle
 
             //cliff sensors
-            if ((sensor_T->cliffLeft) | (sensor_T->cliffLeftSignal > cliffBig)){
+            if ((sensor_T->cliffLeft) | (sensor_T->cliffLeftSignal > cliffBig)){ /*if the left cliff sensor sees drop in distance or white, stop*/
                 stopFlag = '1';
                 oi_setWheels(0, 0); //set wheels to 0
                 return sum/10;
@@ -43,11 +43,11 @@ float turn_clockwise(oi_t *sensor_T, int degrees){
         oi_setWheels(-50, 50); // turn right (left wheel forwards)
         while (sum < degrees) {
             oi_update(sensor_T);
-            sum -= sensor_T->angle;
+            sum -= sensor_T->angle; //updates angle
 
             //cliff sensors
             if ((sensor_T->cliffLeft) | (sensor_T->cliffLeftSignal > cliffBig)){
-                stopFlag = '1';
+                stopFlag = '1'; //used to send user what happened
                 oi_setWheels(0, 0); //set wheels to 0
                 return sum/10;
             }
@@ -94,8 +94,8 @@ float move_forwards(oi_t *sensor_F, int centimeters, float a, float b){
             angleDeviation -= sensor_F->angle;
 
             //bump sensors
-            if (sensor_F->bumpLeft && sensor_F->bumpRight) {
-                stopFlag = 'B';
+            if (sensor_F->bumpLeft && sensor_F->bumpRight) { //if the left and right bump is hit stop
+                stopFlag = 'B'; //to send to user what happened
                 oi_setWheels(0, 0); //set wheels to 0
                 return sum/10;
             }
@@ -111,7 +111,7 @@ float move_forwards(oi_t *sensor_F, int centimeters, float a, float b){
             }
 
             //cliff sensors
-            if ((sensor_F->cliffLeft) | (sensor_F->cliffLeftSignal > cliffBig)){
+            if ((sensor_F->cliffLeft) | (sensor_F->cliffLeftSignal > cliffBig)){ /*if the left cliff sensor sees drop in distance or white, stop*/
                 stopFlag = '1';
                 oi_setWheels(0, 0); //set wheels to 0
                 return sum/10;
