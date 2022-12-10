@@ -166,9 +166,11 @@ void main(){
 	
 	char notes[] = {74, 67, '\0'};
 	char duration[] = {64, 80, '\0'};
-	
-	free(notes);
-	free(duration);
+
+	//frees memory
+
+	free(notes); 
+	free(duration); 
 	
 	oi_loadSong(0, 2, notes, duration);
 
@@ -302,7 +304,7 @@ void main(){
                 }//end of switch
 				
                 if (stopFlag == 'L'){
-                    uart_sendStr("START bump l END\r\n");
+                    uart_sendStr("START bump l END\r\n"); //sends user why bot stopped
                 }
                 if (stopFlag == 'R'){
                     uart_sendStr("START bump r END\r\n");
@@ -322,7 +324,7 @@ void main(){
                 if (stopFlag == '4'){
                     uart_sendStr("START cliff rr END\r\n");
                 }
-                if (stopFlag != '\0'){
+                if (stopFlag != '\0'){  //continues once stop flag cleared or not there
                     uart_sendStr("START move ");
 					oi_play_song(0);
                     amountMoved = move_forwards(sensor_data, -15, a_las, b_las);
