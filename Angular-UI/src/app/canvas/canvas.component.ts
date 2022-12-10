@@ -4,6 +4,10 @@ import {TallObstacle} from "../models/TallObstacle";
 import {CyBot} from "../models/CyBot";
 import {ScenarioService} from "../scenario.service";
 
+/**
+ * @Author Coby Konkol
+ * Manages screen and on click listeners
+ */
 @Component({
   selector: 'app-canvas',
   templateUrl: './canvas.component.html',
@@ -28,6 +32,9 @@ export class CanvasComponent implements OnInit {
 
   }
 
+  /**
+   * Initializes listeners for clicking and initializes canvas
+   */
   ngOnInit(): void {
     this.ctx = this.canvas.nativeElement.getContext('2d')!;
 
@@ -43,6 +50,9 @@ export class CanvasComponent implements OnInit {
     this.animate();
   }
 
+  /**
+   * Draw all elements, utilizes scenario.drawElements
+   */
   animate(): void {
     this.ctx.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
     this.scenario.drawElements(this.ctx);

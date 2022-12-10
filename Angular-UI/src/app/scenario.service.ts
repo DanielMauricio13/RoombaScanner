@@ -7,6 +7,11 @@ import {scale} from "./Constants";
 import {ShortObstacle} from "./models/ShortObstacle";
 import {BehaviorSubject} from "rxjs";
 
+/**
+ * @Author Coby Konkol
+ * Scenario for the CyBot.
+ * Stores array of each type of obstacle, cybot instance, and accesses the socket
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -18,9 +23,13 @@ export class ScenarioService {
   private _cliffs: Cliff[];
   private _cyBot!: CyBot;
   private _moving: boolean;
-  updateGui: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  updateGui: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);// flag for updating GUI events
 
 
+  /**
+   * Initializes scenario to match initial conditions of the CyBot
+   * @param socketService
+   */
   constructor(private socketService: SocketioService) {
 
     this._tallObstacles = [];
@@ -28,6 +37,7 @@ export class ScenarioService {
     this._cliffs = [];
 
     this.cyBot = new CyBot(20, 20);
+    // listener for when the socket receives a complete command from the CyBot
     this.socketService.sharedMessage.subscribe(value => {
       this.receiveMessage(value);
       this.updateGui.next(true);
@@ -68,6 +78,7 @@ export class ScenarioService {
   }
 
   /**
+   * @Author Coby Konkol
    * Draw all drawable elements on the canvas
    * @param ctx
    */
@@ -95,6 +106,7 @@ export class ScenarioService {
   // MOUSE INTERACTIONS:
 
   /**
+   * @Author Coby Konkol
    * The user clicked a location on the screen
    * @param ev
    */
@@ -116,6 +128,7 @@ export class ScenarioService {
   }
 
   /**
+   * @Author Daniel Vergara
    * The user right-clicked a location on the screen, freeing the sensors
    * @param ev
    */
@@ -124,6 +137,12 @@ export class ScenarioService {
     return false;
   }
 
+  /**
+   * @Author Nate Trotter
+   * Calculate angle and distance to send to CyBot based on mouse click input
+   * @param xCm
+   * @param yCm
+   */
   goToXYCM(xCm: number, yCm: number){
     let cyX = this._cyBot.XCm;
     let cyY = this._cyBot.YCm;
@@ -155,6 +174,7 @@ export class ScenarioService {
 
   //MESSAGES
   /**
+   * @Author Coby Konkol
    * Receive general message (called from subscription) over socket
    * @param msg
    */
@@ -188,6 +208,7 @@ export class ScenarioService {
   }
 
   /**
+   * @Author Daniel Vergara
    * Found a tall obstacle using IR sensor
    * Called when message of format "START obj <distance> END"
    * @param msg
@@ -219,39 +240,14 @@ export class ScenarioService {
 
     tempX = this._cyBot.XCm + (distance+16) * Math.cos(tempAng * Math.PI / 180);
     tempY = this._cyBot.YCm + (distance+16) * Math.sin(tempAng * Math.PI / 180);
-    /**old code
-    *if(angle >0){
-    *  tempY= Math.sin(angle * Math.PI / 180) * distance + Math.sin(this._cyBot.angle * Math.PI / 180) * 15;
-    *  tempY=this._cyBot.YCm + tempY;
-    *  let c = Math.cos(angle * Math.PI / 180) * distance + Math.cos(this._cyBot.angle * Math.PI / 180) * 15;
-    *
-    *  if(angle > 90)
-    *    tempX= this._cyBot.XCm - c;
-    *  else
-    *    tempX= this._cyBot.XCm + c;
-    *
-    *}
-    *else{
-    *  angle= angle * -1;
-    *  tempY= Math.sin(angle * Math.PI / 180) * distance + Math.sin(this._cyBot.angle * Math.PI / 180) * 15;
-    *  tempY=this._cyBot.YCm - tempY;
-    *  let c = Math.cos(angle * Math.PI / 180) * distance + Math.cos(this._cyBot.angle * Math.PI / 180) * 15;
-    *  // let c= Math.abs((distance * distance) - ( tempY * tempY));
-    *  // c= Math.sqrt(c);
-    *  if(angle > -90)
-    *    tempX= this._cyBot.XCm + c;
-    *  else
-    *    tempX= this._cyBot.XCm - c;
-    *
-    *}
-    */
+
     console.log("tall Object: x: " +tempX + " y " + tempY +"\n\t Cybot: " + this._cyBot.XCm + " " +this._cyBot.YCm + " " + this._cyBot.angle);
     this._tallObstacles.push(new TallObstacle(tempX, tempY, width))
 
-    //TODO TEST
   }
 
   /**
+   * @Author Daniel Vergara
    * Robot bumped into an obstacle
    * Called whe message of format "START BUMP {l/r/b} END"
    * @param msg
@@ -308,6 +304,7 @@ export class ScenarioService {
     }
   }
   /**
+   * @Author Coby Konkol
    * Robot drove a certain distance from current position
    * Called wHen message of format "START amount moved <distance> END
    * @param msg
@@ -324,6 +321,7 @@ export class ScenarioService {
   }
 
   /**
+   * @Author Coby Konkol
    * CyBot turned a certain angle from current position
    * Called when message format "START amount turned <angle> END"
    * @param msg
@@ -340,6 +338,7 @@ export class ScenarioService {
   }
 
   /**
+   * @Author Murali Patibandla
    * CyBot detected a cliff at the corresponding sensor
    * Called when message format "START cliff {ll/ml/mr/rr} END"
    * @param msg
@@ -416,6 +415,7 @@ export class ScenarioService {
   }
 
   /**
+   * @Author Coby Konkol
    * CyBot is ready to receive more instructions
    * Called when message format "START READY END"
    * @param msg
@@ -426,18 +426,11 @@ export class ScenarioService {
   }
 
   /**
+   * @Author Coby Konkol
    * CyBot sent a message that is not recognized by the code
    * @param msg
    */
   getUnknownMessage(msg: string){
     console.log("UNKNOWN MESSAGE: " + msg);
   }
-
-
-
-
-
-
-
-
 }

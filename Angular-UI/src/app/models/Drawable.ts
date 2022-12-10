@@ -1,5 +1,10 @@
 import {scale} from "../Constants";
 
+/**
+ * @Author Coby Konkol
+ * Base class for all elements that should be drawn by the CyBot
+ * Provides color, x and y management, and drawing. Each of which can be overridden
+ */
 export class Drawable {
   protected color: string = "3370d4"
 

@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
 
+/**
+ * Main component for the app. Contains Canvas HTML element
+ */
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

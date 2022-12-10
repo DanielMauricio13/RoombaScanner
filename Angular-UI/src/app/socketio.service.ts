@@ -6,10 +6,10 @@ import io from 'socket.io-client'
 import {BehaviorSubject, map, Observable, ReplaySubject, Subject} from "rxjs";
 
 
-
-
-
-
+/**
+ * @Author Coby Konkol
+ * Component for managing socket with Flask Server
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -20,9 +20,10 @@ export class SocketioService {
 
 
 private _socket;
-sharedMessage = new ReplaySubject<string>();
+sharedMessage = new ReplaySubject<string>(); // Provides access to message events other components
 
   constructor() {
+    // Create socket with Flask SocketIO server
     this._socket = io('127.0.0.1:5000', {
       reconnectionDelay: 1000,
       reconnection: true,
@@ -35,6 +36,7 @@ sharedMessage = new ReplaySubject<string>();
 
     console.log('connecting');
 
+    // connection events
     this._socket.on("connect_error", (err) => {
       console.log(`connect_error due to ${err.message}`);
       this._socket.emit("Connected!");
@@ -42,6 +44,7 @@ sharedMessage = new ReplaySubject<string>();
     this._socket.on("connection", (socket) => {
       console.log("Connected");
     });
+    // On message events
     this.socket.on("message", (msg) =>{
       this.sharedMessage.next(msg);
       }
@@ -49,12 +52,13 @@ sharedMessage = new ReplaySubject<string>();
 
   }
 
-
+// Send message over socket through Flask server
   sendMessage(message: string){
     console.log("sending: " + message);
     this._socket.emit('message', message);
   }
 
+  // accessor for socket
   get socket() {
     return this._socket;
   }

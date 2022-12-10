@@ -2,6 +2,10 @@ import {Drawable} from "./Drawable";
 import {scale} from "../Constants";
 ///<reference path="../Constants.ts"/>
 
+/**
+ * @Author Coby Konkol
+ * Manages cliff instances found by the CyBot
+ **/
 export class Cliff extends Drawable{
 
 
